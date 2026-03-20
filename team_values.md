@@ -1,0 +1,1 @@
+Our team will be respectful and kind to one another, and we will commit to the task and make sure to meet deadlines. Be fair and honest and contribute your fair share. Don’t be afraid to speak up and share ideas.
