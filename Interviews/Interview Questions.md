@@ -11,3 +11,5 @@ TOPIC : Finding a peer network# Many students feel isolated and disconnected dur
     a. What did you dislike about the app?
 9. If you could design an app to help you make friends, what features would you want it to have and why?
 10. What would make you feel comfortable reaching out to someone new through an app?
+
+Test Cards
