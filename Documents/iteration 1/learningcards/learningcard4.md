@@ -27,6 +27,5 @@ Confirmed, but the core issue is context (cold unknown vs shared task). Confiden
 **ACCEPTED (refined)**: Barrier confirmed. Mobilize design around anxiety-reducing contexts, not requiring students to become suddenly confident.
 
 ## NEXT STEP
-- Provide contextual connectors (e.g., “hello, same assignment?” prompts)
-- Add safety filters and introvert-friendly modes
-- Offer confidence pathways: small steps, “warm onboarding peers”, response-reliability status
+- Display mutual interests or classes on profiles to reduce uncertainty before reaching out
+- Reduce pressure by giving users easy conversation starters based on that shared context.

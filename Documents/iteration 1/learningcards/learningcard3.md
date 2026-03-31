@@ -27,5 +27,5 @@ Strong consensus for groups as an initial stage; one-on-one is still valued late
 **ACCEPTED (refined)**. Group-first onboarding is validated; preserve project path to 1:1 conversions.
 
 ## NEXT STEP
-- Build features: small-group icebreaker sessions, peer circles.
+- Build a small-group matching feature that randomly places users into small groups based on shared interests and preferred group size.
 - Enable simple transition from group chat to private 1:1 chat after connection.
