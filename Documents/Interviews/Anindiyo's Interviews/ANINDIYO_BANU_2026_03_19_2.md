@@ -1,4 +1,8 @@
 Interview 2
+
+[Recording][1]
+
+
 Q: So what usually stops you from approaching or talking to new people?
 A: I mean, maybe the environment. For example, like if we’re in a lecture hall, I probably wouldn’t go up to you. But in a smaller setting, like a classroom, maybe I would. There’s a higher chance of me trying to talk to you.
 
@@ -34,3 +38,6 @@ A: Maybe something like Tinder, with profiles where you can just find people. I 
 
 Q: What would make you feel comfortable reaching out to someone new through an app?
 A: Maybe if there was some way to guarantee that they would reply if you message first. I think people hesitate because they don’t know if they’ll get a response.
+---
+
+[1]: https://uq.sharepoint.com/:v:/t/Section_7620_22283/IQA_VCG6BS9PSIp-GxooNKYJAXhFanslpaBpnkC6LEm3p-s?e=BjkHVF

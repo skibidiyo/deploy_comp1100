@@ -1,4 +1,8 @@
 Interview 3
+
+[Recording][1]
+
+
 Q: What usually stops you from approaching or talking to new people?
 A: Um, honestly, it’s mostly overthinking. I started like wondering if I’ll sound awkward or if they are not interested. So I end up not approaching at all.
 
@@ -31,3 +35,7 @@ A: I think I want a matching system based on interest on schedules, because smal
 
 Q: What would make you feel comfortable reaching out to someone new through an app?
 A: Well, if I knew we had shared interests and if the app gave a reason to connect, like suggesting a topic or activity, also a friendly and low pressure environment will have a lot.
+
+---
+
+[1]: https://uq.sharepoint.com/:u:/t/Section_7620_22283/IQBulltGsyC2TYTaJzr90dX6AbHlcMixqqSXwYquieC9R9Y?e=HnAdfI
