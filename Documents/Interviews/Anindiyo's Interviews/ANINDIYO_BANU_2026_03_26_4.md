@@ -1,4 +1,8 @@
 Interview 4
+
+[Recording][1]
+
+
 Q: What usually stops you from approaching or talking to new people?
 A: Usually, it’s the awkwardness. I’m scared that they might judge me or notice differences between us. I’m also quite shy and not used to talking to new people.
 
@@ -34,3 +38,7 @@ A: I would focus on matching based on interests and hobbies. If people can conne
 
 Q: What would make you feel comfortable reaching out to someone new?
 A: Events would help, like regular (weekly or monthly) gatherings based on shared hobbies, so people can meet and interact more naturally.
+
+---
+
+[1]: https://uq.sharepoint.com/:u:/t/Section_7620_22283/IQC7A0PR68mNRZXY9AGL8cBdAfPwvV-dxHstef_OURi1R_c?e=MSNVAa
