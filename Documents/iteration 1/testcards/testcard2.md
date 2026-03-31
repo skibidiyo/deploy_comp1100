@@ -19,3 +19,8 @@ We are right if:
 
 We are wrong if:
 - Most students do not mention shared interests as an important factor in forming friendships.
+
+**INTERVIEW QUESTIONS**  
+We will ask:
+    What has helped you the most in building a network of friends so far?
+    What kind of information would you want to know about someone before deciding to connect?
