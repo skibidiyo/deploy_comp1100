@@ -1,3 +1,5 @@
+## HYPOTHESIS 5 - App Features
+
 **HYPOTHESIS**
 Students prefer a friend-finding app that includes interest-based matching and low-pressure interaction features (e.g., group chats or browsing profiles) over direct 1-to-1 matching.
 
