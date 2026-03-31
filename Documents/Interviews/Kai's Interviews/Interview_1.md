@@ -10,11 +10,11 @@ Kai: So the topic of this interview today is about finding a peer network, as ma
 
 Interviewee: Yep. 
 
-Kai: All right. So 1st question. What usually stops you from approaching or talking to new people? 
+> 🟣 *[Kai: All right. So 1st question. What usually stops you from approaching or talking to new people?]*
 
 Interviewee: Um, I'm fairly introverted, so I usually just don't talk to new people in general, and if I do, it's usually if, um, If we're in the same class, we'll have the same interests. 
 
-Kai: Fair enough, fair enough, and in your life on campus so far, what's helped you the most in building a friend network? If you have one.
+> 🟣 *[Kai: Fair enough, fair enough, and in your life on campus so far, what's helped you the most in building a friend network? If you have one.]*
 
 Interviewee: Um, Usually, uh, meeting people who, who have the same sort of interest, usually video games. 
 
@@ -22,7 +22,7 @@ Kai: Video games, eh?
 
 Interviewee: Yep. 
 
-Kai: And what is it that makes it hard to approach just other students on campus? 
+> 🟣 *[Kai: And what is it that makes it hard to approach just other students on campus?]*
 
 Interviewee: Yeah, as I said before, I'm usually fairly introverted, so I don't really talk to too many new people. And if I do, what's usually about, about the work we're doing. So hobbies and stuff don't usually come up. 
 
@@ -30,11 +30,11 @@ Kai: So you feel like better connecting with people if it's people you already h
  
 Interviewee: Yeah, definitely. 
 
-Kai: Gotcha. And What is one thing that would make it easier for you to build some friendships at uni? 
+> 🟣 *[Kai: Gotcha. And What is one thing that would make it easier for you to build some friendships at uni?]*
 
 Interviewee: Um. I guess, I guess if I participated more in clubs and stuff, I'm not really in any clubs. 
 
-Kai: Clubs, yep, yep. And... What is lacking from finding friends via clubs or university events? 
+> 🟣 *[Kai: Clubs, yep, yep. And... What is lacking from finding friends via clubs or university events?]*
 
 Interviewee: Um, I haven't really looked into too many clubs, um, so I'm not quite sure, but I'd say...
 
@@ -42,7 +42,7 @@ Kai: Well, I know for me, none of the clubs were really things that I was into.
 
 Interviewee: Yeah, it's a good point. More variety would probably make it a lot better.
 
-Kai: More variety, yep. And do you prefer connecting like one on one or do you like being in a group, meeting new people? 
+> 🟣 *[Kai: More variety, yep. And do you prefer connecting like one on one or do you like being in a group, meeting new people?]*
 
 Interviewee: I'm not super fussed, but I guess one-on-one's probably better. 
 
@@ -50,11 +50,11 @@ Kai: You prefer one on one? Why is that?
 
 Interviewee: Um... Just because it's easier to have a good chat one on one. 
 
-Kai: Gotcha, gotcha, yeah. And what kind of information would you want to know about someone before you try to connect with them? 
+> 🟣 *[Kai: Gotcha, gotcha, yeah. And what kind of information would you want to know about someone before you try to connect with them?]*
 
 Interviewee: Usually just finding at least like one shared interest is good. Because then you've got something to talk about. Otherwise, it can be just a bit awkward, I guess. 
 
-Kai: Absolutely, yep. And have you used any apps, group chats, or platforms to connect with people? 
+> 🟣 *[Kai: Absolutely, yep. And have you used any apps, group chats, or platforms to connect with people?]*
 
 Interviewee: Um, in general, um, mainly discord, um, I guess Instagram, but that's more with, like, not with new friends, just with friends. 
 
@@ -82,7 +82,8 @@ Kai: And I feel like, um, in my experience, that The servers are too public in t
 
 Interviewee: Yeah, it's usually just, um, just making a group and then disbanding after, at least for some things, for what I do. So trying to like make actual online friends usually isn't great that way. 
 
-Kai: So you'd definitely like it if it was more of like a tight-knit kind of group. 
+Kai: So you'd definitely like it if it was more of like a tight-knit kind of group.
+ 
 Interviewee: Yeah, I wish there were like better ways for like smaller servers to get pushed better, I guess. 
 
 Kai: Smaller servers, yep. Like very specific interests or...(yeah) Gotcha. And if you could design like an app to help you make friends, what features would you want it to have and why? 
@@ -97,7 +98,7 @@ Kai: So you're talking like, so with a lot of people, but a lot of different, sm
 
 Interviewee: Yeah, that helps kind of fix the main issues that the biggest servers have. 
 
-Kai: Interesting. And what would make you feel more comfortable reaching out to someone through an app? 
+> 🟣 *[Kai: Interesting. And what would make you feel more comfortable reaching out to someone through an app?]*
 
 Interviewee: Um, Usually I only really join people if they're either or like talk to people if they're asking a question or if I have questions, um, or also if we're doing the same activities. So, I think, um, That makes it easier. 
 
