@@ -72,7 +72,7 @@ Interviewee: Yeah, personally for me, yes.
 
 > 🟣 *[Kai: Okay. Um, what kind of information would you want to know about something before you decide to connect with them?]*
 
-Interviewee: Um, probably just the basics, you know, the rage. Even it's like, I guess, in the contacts of university, what they're studying. I don't know, what they like to do, their free time, you know, things like that. Just, I guess, the small talk stuff. 
+Interviewee: Um, probably just the basics, you know, their age. Even it's like, I guess, in the contacts of university, what they're studying. I don't know, what they like to do, their free time, you know, things like that. Just, I guess, the small talk stuff. 
 
 Kai: Is most of your friends that you've met through just like proximity, like kind of in the same class, or is it mostly in passing or in clubs? 
 
