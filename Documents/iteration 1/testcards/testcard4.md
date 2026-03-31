@@ -4,7 +4,7 @@
 The majority of university students feel uncomfortable approaching new people due to social anxiety or lack of confidence.
 
 **TEST**  
-To test the proposed hypotheses, we will interview 25 current The University of Queensland students about their experiences in forming peer networks on campus.
+To verify this, we will interview students and analyze their responses to understand the role of social anxiety and confidence in approaching others.
 
 **METRIC** 
 And measure the percentage of people that are uncomfortable approaching new people MAINLY due to social anxiety or lack of confidence.
@@ -13,6 +13,6 @@ And measure the percentage of people that are uncomfortable approaching new peop
 We will be right if a majority of the interviewees (50% or higher) agree that they do feel uncomfortable approaching new people due to their own lack of confidence.
 
 **INTERVIEW QUESTIONS** 
-We will ask:
-    What usually stops you from approaching or talking to new people?
-    What has helped you the most in building a network of friends so far?
+1. What usually stops you from approaching or talking to new people?
+2. What has helped you the most in building a network of friends so far?
+3. What makes it hard to approach other students?

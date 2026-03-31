@@ -1,7 +1,7 @@
 # Learning Card 2: Shared interests foster friendships (Test Card 2 hypothesis)
 
 ## ORIGINAL HYPOTHESIS
-University students are more likely to form friendships when they share common interests.
+University students are more likely to form friendships when they share common interests or activities.
 
 ## WHAT WE LEARNED FROM ALL INTERVIEWS
 Confirmed: shared interest is the “door opener” used by nearly every participant. Students want proficiency of shared topics while making initial contact.
@@ -31,5 +31,4 @@ Confirmed: shared interest is the “door opener” used by nearly every partici
 ## NEXT STEP
 - Implement interest tagging and matching icons on profiles.
 - Add “shared activity” badges (same class/project/club) in discovery.
-- Create interest-labeled micro-groups and event feeds.
-- Enable low-friction coming-soon matching when students indicate shared hobbies.
+- Create interest-labeled groups.

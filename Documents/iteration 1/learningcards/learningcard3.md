@@ -27,6 +27,5 @@ Strong consensus for groups as an initial stage; one-on-one is still valued late
 **ACCEPTED (refined)**. Group-first onboarding is validated; preserve project path to 1:1 conversions.
 
 ## NEXT STEP
-- Build features: small-group icebreaker sessions, peer circles, event-based pods.
-- Add planner for micro-group events with attendance, push reminders.
+- Build features: small-group icebreaker sessions, peer circles.
 - Enable simple transition from group chat to private 1:1 chat after connection.

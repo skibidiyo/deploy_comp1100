@@ -10,7 +10,6 @@ Confirmed, but the core issue is context (cold unknown vs shared task). Confiden
 - Anxiety arises from potential rejection, awkwardness, or inappropriate timing (headphones, lectures)
 - Avoiding strangers stems from not knowing what to talk about or fearing cultural miscues
 - Structured activities (group projects, club events) allow calm approach, repeated contact, and reduces anxiety
-- Tools needed: guided openers, guards against ghosting, connection quality signals.
 
 ## EVIDENCE FROM ALL STUDENTS BY SOURCE
 - **Kai1**: “I’m introverted... I only approach at same interest class.”
@@ -25,7 +24,7 @@ Confirmed, but the core issue is context (cold unknown vs shared task). Confiden
 - **Anya (Thomas)**: “The large unfamiliar environment itself is intimidating; I rely on the 'third place' to reduce anxiety.”
 
 ## DECISION
-**REFINED**: Barrier confirmed. Mobilize design around anxiety-reducing contexts, not requiring students to become suddenly confident.
+**ACCEPTED (refined)**: Barrier confirmed. Mobilize design around anxiety-reducing contexts, not requiring students to become suddenly confident.
 
 ## NEXT STEP
 - Provide contextual connectors (e.g., “hello, same assignment?” prompts)

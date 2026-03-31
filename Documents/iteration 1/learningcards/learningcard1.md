@@ -30,7 +30,5 @@ All transcripts in `Transcripts/` confirm this is true: students consistently re
 
 ## NEXT STEP
 Implement product requirements:
-- Display shared class/interest meta before connecting
-- Offer micro activities and repeated events with clear invitations
-- Provide “entry tasks” (e.g., assignment buddy, mini challenge) to reduce cold-start anxiety
-- Tailor UX for both introverts (small group, low-commitment) and extroverts (event roaming)
+- Display shared class/interest before connecting.
+- Share upcoming UQ events.
