@@ -1,4 +1,8 @@
 Interview 1
+
+[Recording][1]
+
+
 Q: What usually stops you from approaching or talking to new people?
 A: Usually overthinking because I worry about whether it will be awkward or maybe if they’re not interested in talking to me. So sometimes I just don’t go for it.
 
@@ -34,3 +38,7 @@ A: Maybe I could see what interests that they share with me or maybe what classe
 
 Q: What would make you feel comfortable reaching out to someone new through an app?
 A: Maybe if I knew that we had something in common.
+
+---
+
+[1]: https://uq.sharepoint.com/:v:/t/Section_7620_22283/IQDeAgBs4MatRrqYRVJfzw_EAXIQD49-SqoZ5hXujPr69go?e=tlaV1M

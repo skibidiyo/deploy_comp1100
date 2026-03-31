@@ -1,4 +1,8 @@
 Interview 5
+
+[Recording][1]
+
+
 Q: What usually stops you from approaching or talking to new people?
 A: I guess it would probably be, like... what stops me usually? Myself, I guess, like, me being an introvert person makes it hard to approach new people. Like, I have to figure out what topics or conversation I need to come up with before approaching them. It’s usually very a template type of conversation, so... yeah.
 
@@ -37,3 +41,6 @@ A: Um... it’s actually an app that has already existed. I forgot the name, but
 
 Q: What would make you feel comfortable reaching out to someone using an app?
 A: Probably, like, the app that I just said before, because we set, like, we made an activity, and when people come and join this activity, automatically, we assume that, oh, you like this type of side quest, too. So, like, we have something in common then, you know? That’s a very good, like, startup conversation.
+---
+
+[1]: https://uq.sharepoint.com/:u:/t/Section_7620_22283/IQCjbummAvt7SqXrkThN0VwnAegNFyhaYrDNBdXQH9lNJb8?e=BKPgoA
