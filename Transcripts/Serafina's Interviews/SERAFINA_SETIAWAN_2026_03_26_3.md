@@ -1,5 +1,7 @@
 # Interview 3
 
+[Interview 3 - software innovation](https://uq.sharepoint.com/:u:/r/teams/Section_7620_22283/Shared%20Documents/49_SriKrishna/Interviews%20-%20Serafina/interview%203%20-%20software%20innovation.m4a?csf=1&web=1&e=kbo5KH)
+
 **Serafina:** Okay, I’m recording. Okay, so for the first question, what usually stops you from approaching or talking to new people?
 
 **Interviewee #3:** I mean, if I think that this person looks mean, or, like, um, or really, like, a different, uh, having a different culture than me. Then maybe I will not approach to, like, new people.

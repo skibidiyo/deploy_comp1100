@@ -1,5 +1,7 @@
 # Interview 6
 
+[Interview 6 - software innovation](https://uq.sharepoint.com/:u:/r/teams/Section_7620_22283/Shared%20Documents/49_SriKrishna/Interviews%20-%20Serafina/interview%206%20-%20software%20innovation.m4a?csf=1&web=1&e=thweSx)
+
 **Serafina:** Okay, I’m recording. So for the first question, what usually stops you from approaching or talking to new people?
 
 **Interviewee #6:** Mm, probably what stops me is my own shyness, cause I’m a very shy person, and I am not the type to, like, randomly go up to someone and go, hey, and talk to them. Probably like I would, but it was just really rare. And like once in a blue moon type of thing.
