@@ -1,17 +1,14 @@
-## Hypothesis :Opportunity gap hypothesis
+## Hypothesis 1 :Opportunity gap hypothesis
 
 **HYPOTHESIS**  
-Students perceive a lack of accessible and consistent social opportunities (e.g., events or spaces) as a barrier to forming friendships.
+University students struggle to make friends due to social barriers, lack of context, and inconsistent connection paths.
 
 **TEST**  
-We will survey 30–50 university students and ask:
-- How easy is it to make friends at university?
-- What are the biggest barriers?
-- Do you feel there are enough social events/opportunities available?
+To verify this, we will analyze interviews with university students about the barriers they face in forming friendships.
 
 **METRIC**  
 We are right if:
-- At least 60% of students say making friends is difficult, AND  
+- At least 60% of students say making friends is difficult 
 - A majority identify lack of events/opportunities as a top 2 barrier.
 
 **CRITERIA**  
@@ -22,14 +19,5 @@ We are right if:
 - Students consistently report difficulty forming connections at university  
 
 **INTERVIEW QUESTIONS**  
-1. What usually stops you from approaching or talking to new people?  
-2. What has helped you the most in building a network of friends so far?  
-3. What makes it hard to approach other students?  
-4. What would make it easier for you to build friendships or find community at uni?  
-5. What is lacking from finding friends via clubs or university events?  
-6. Would you prefer connecting one-on-one or in groups? Why?  
-7. What kind of information would you want to know about someone before deciding to connect?  
-8. Have you used any apps, group chats, or platforms to connect with people?  
-9. What did you dislike about those apps?  
-10. If you could design an app to help you make friends, what features would it have and why?  
-11. What would make you feel comfortable reaching out to someone new through an app?git
+1. What usually stops you from approaching or talking to new people?    
+2. What makes it hard to approach other students?  
