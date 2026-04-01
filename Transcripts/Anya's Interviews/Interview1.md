@@ -1,7 +1,3 @@
-Lachlan
-
-
-
 00:00:01,040 --> 00:00:07,240 [speaker_0]
 Hi. Thanks for participating in this interview with me today. This should take about 10 minutes.
 Are you okay with me recording this?

@@ -1,7 +1,3 @@
-Sora 
-
-
-
 00:00:01,260 --> 00:00:07,900 [speaker_0]
 Hi, thanks for participating in this interview with me today. This should take about five to 10 minutes. Are you okay with me recording this?
 

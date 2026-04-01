@@ -1,6 +1,3 @@
-Haruka 
-
-
 00:00:01,180 --> 00:00:04,340 [speaker_0]
 Hello. Thank you for participating this interview with me today. So this will take about five to 10 minutes. Are you okay with me recording this?
 
