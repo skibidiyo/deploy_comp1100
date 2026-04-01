@@ -1,5 +1,7 @@
 # Interview 2
 
+[Interview 2 - software innovation](https://uq.sharepoint.com/:u:/r/teams/Section_7620_22283/Shared%20Documents/49_SriKrishna/Interviews%20-%20Serafina/interview%202%20-%20software%20innovation.m4a?csf=1&web=1&e=gNclaT)
+
 **Serafina:** Okay, I’m recording right now. Um, so for the first question, what usually stops you from approaching or talking to new people?
 
 **Interviewee #2:** Uh, I think maybe because I’m a woman of color myself, and this is, like, a predominantly white country. I, uh, would feel more, uh, I sometimes don’t feel as comfortable if, um, I don’t know, maybe, like, they’re native here and, like, would probably, like, know more or, like, have better English than I do. Yeah, sometimes that just scares me.
