@@ -36,6 +36,7 @@ main/ <br>
 |------|------|—— testcards <br> 
 |------|------|------|—— Contains test cards for each hypothesis <br>
 |------|------|—— business model canvas <br>
+|------|------|—— competitor analysis <br>
 |------|------|—— Value proposition canvas - files <br>
 |------|------|------|—— assets/ <br> 
 |------|------|------|------|—— Contains value proposition canvas image <br>
