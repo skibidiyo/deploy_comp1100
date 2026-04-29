@@ -28,6 +28,18 @@ main/ <br>
 |------|------|------|—— assets/ <br> 
 |------|------|------|------|—— Contains value proposition canvas image <br>
 |------|------|------|—— Value proposition canvas.md <br>
+|------|—— iteration 2 <br>
+|------|------|—— further notes <br>
+|------|------|------|—— Interview Questions <br>
+|------|------|—— learningcards <br>
+|------|------|------|—— Contains learning cards for each of the test cards <br>
+|------|------|—— testcards <br> 
+|------|------|------|—— Contains test cards for each hypothesis <br>
+|------|------|—— business model canvas <br>
+|------|------|—— Value proposition canvas - files <br>
+|------|------|------|—— assets/ <br> 
+|------|------|------|------|—— Contains value proposition canvas image <br>
+|------|------|------|—— Value proposition canvas.md <br>
 |—— Transcripts/ <br>
 |------|—— iteration 1 <br>
 |------|------|—— Contains interviews from iteration 1 <br>
