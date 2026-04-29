@@ -20,8 +20,8 @@ Students are open to swiping to find friends, but only when profiles show intere
 - **Anindiyo #2**: "I think it could work… making friends and dating have some similarities." (open)
 
 ### Anya's Interviews
-- **Rory**: "If I saw something I was also interested in, that could encourage me to swipe on them." (conditional)
-- **Max**: "Quick and easy way to find commonalities and friends… knowing they are verified is important." (positive)
+- **Anya #1**: "If I saw something I was also interested in, that could encourage me to swipe on them." (conditional)
+- **Anya #2**: "Quick and easy way to find commonalities and friends… knowing they are verified is important." (positive)
 
 ### Kai's Interviews
 - **Kai #1**: "It sort of takes off the edge of the initial social interaction." (positive)
