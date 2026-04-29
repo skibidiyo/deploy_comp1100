@@ -29,6 +29,10 @@ main/ <br>
 |------|------|------|------|—— Contains value proposition canvas image <br>
 |------|------|------|—— Value proposition canvas.md <br>
 |—— Transcripts/ <br>
+|------|—— iteration 1 <br>
+|------|------|—— Contains interviews from iteration 1 <br>
+|------|—— iteration 2 <br>
+|------|------|—— Contains interviews from iteration 2 <br>
 |------|—— contains all interview transcripts <br>
 |—— README.md <br>
 |—— team_values.md <br>
