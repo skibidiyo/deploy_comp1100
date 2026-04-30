@@ -1,3 +1,5 @@
+[Interview 3 - Kai](https://uq.sharepoint.com/:u:/r/teams/Section_7620_22283/Shared%20Documents/49_SriKrishna/Interviews%20-%20Kai/Iteration%202%20Interviews/Iteration%202%20Interview%203.m4a?csf=1&web=1&e=hUDpZF)
+
 Kai: Nice to meet you. I'm Kai. doing interviews for my software design class. Would you like to participate? 
 
 Interviewee: Yes, please. 
