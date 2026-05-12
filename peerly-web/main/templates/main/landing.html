@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peerly | Landing Page</title>
+    <link rel="stylesheet" href="{% static 'main/landing.css' %}">
+</head>
+<body>
+    <div class="dot-grid"></div>
+
+    <main class="frame">
+        
+        <section class="hero" aria-label="Peerly introduction">
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+                <div class="left-panel">
+                    <div class="brand-row">
+                        <img src="{% static 'main/peerly-logo.svg' %}" alt="Peerly logo" class="brand-logo">
+                        <h1>Peerly</h1>
+                    </div>
+
+                    <h2>Make real friends at UQ</h2>
+                    <p>
+                        Connect with classmates, join exclusive campus communities,
+                        and find your tribe at the University of Queensland.
+                    </p>
+
+                    <div class="stats-row">
+                        <span class="chip">UQ Verified Only</span>
+                        <span class="chip">5,000+ Active Students</span>
+                    </div>
+                </div>
+
+                <aside class="cta-card">
+                    <h3>Get Started</h3>
+                    <p>
+                        Peerly is only for UQ students. Sign in with your UQ ID
+                        card to get started.
+                    </p>
+
+                    <button type="button" class="primary-btn">Continue with UQ Account</button>
+
+                    <p class="terms">
+                        By continuing, you agree to our Terms of Service and Privacy Policy.
+                    </p>
+
+                    <div class="social-proof">
+                        <div class="avatars" aria-hidden="true">
+                            <span class="avatar avatar-1"></span>
+                            <span class="avatar avatar-2"></span>
+                            <span class="avatar avatar-3"></span>
+                        </div>
+                        <span>+2k students joined today</span>
+                    </div>
+                </aside>
+            </div>
+
+            <footer class="bottom-bar">
+                <span>Copyright 2024 Peerly. Built for UQ Students.</span>
+                <nav>
+                    <a href="#">Support</a>
+                    <a href="#">University Guidelines</a>
+                    <a href="#">About</a>
+                </nav>
+            </footer>
+        </section>
+    </main>
+</body>
+</html>
