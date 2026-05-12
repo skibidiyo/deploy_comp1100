@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UQ Account Login</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f0f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+    }
+    /* Top bar */
+    .top-bar {
+      width: 100%;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: .8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      box-shadow: 0 1px 0 rgba(17, 24, 39, 0.03);
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      font-size: .92rem;
+      color: #4c1d95;
+      text-decoration: none;
+      font-weight: 700;
+      padding: .7rem 1rem;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%);
+      border: 1px solid #ddd6fe;
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.08);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+    }
+    .back-link:hover {
+      color: #5b21b6;
+      background: #ede9fe;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.14);
+    }
+    .back-link svg { width: 16px; height: 16px; }
+    /* Page wrapper */
+    .page-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      width: 100%;
+    }
+    .card {
+      display: flex;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.09);
+      overflow: hidden;
+      max-width: 860px;
+      width: 100%;
+    }
+    /* Left panel */
+    .panel-left {
+      background: linear-gradient(160deg, #8b5cf6 0%, #6d28d9 100%);
+      color: #fff;
+      padding: 2.5rem 2rem;
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,.07);
+      border-radius: 50%;
+    }
+    .logo { display: flex; align-items: center; gap: .6rem; font-size: 1.2rem; font-weight: 700; z-index: 1; }
+    .logo-icon { background: rgba(255,255,255,.2); border-radius: 10px; padding: 6px; display: flex; }
+    .panel-left h2 { font-size: 1.35rem; font-weight: 800; line-height: 1.35; z-index: 1; }
+    .panel-left p { font-size: .87rem; opacity: .85; line-height: 1.6; z-index: 1; }
+    .badge-list { display: flex; flex-direction: column; gap: .65rem; z-index: 1; }
+    .badge {
+      background: rgba(255,255,255,.15);
+      border-radius: 10px;
+      padding: .65rem .9rem;
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      font-size: .84rem;
+      font-weight: 500;
+    }
+    .badge img { width: 16px; height: 16px; opacity: .9; }
+    .campus-img {
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: auto;
+      z-index: 1;
+      min-height: 240px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .campus-img img {
+      width: 100%;
+      height: 240px;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+    /* Right panel */
+    .panel-right { flex: 1; padding: 2.5rem 2.5rem; display: flex; flex-direction: column; justify-content: center; }
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #ede9fe; color: #7c3aed;
+      font-size: .78rem; font-weight: 600;
+      border-radius: 99px; padding: .3rem .85rem;
+      margin-bottom: 1.1rem;
+      width: fit-content;
+    }
+    .verified-badge img { width: 14px; height: 14px; }
+    .panel-right h1 { font-size: 1.75rem; font-weight: 800; color: #111; line-height: 1.2; margin-bottom: .4rem; }
+    .panel-right .subtitle { color: #6b7280; font-size: .9rem; margin-bottom: 1.6rem; }
+    .form-group { margin-bottom: 1.1rem; }
+    .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: .4rem; }
+    label { font-size: .85rem; font-weight: 600; color: #374151; }
+    .forgot { font-size: .85rem; color: #7c3aed; text-decoration: none; font-weight: 600; }
+    .input-wrap { position: relative; }
+    .input-wrap .icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); display: inline-flex; opacity: .5; }
+    .icon-img { width: 17px; height: 17px; display: block; }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%; padding: .7rem .75rem .7rem 2.5rem;
+      border: 1.5px solid #d1d5db; border-radius: 8px;
+      font-size: .93rem; outline: none; transition: border .2s; color: #111;
+      background: #fff;
+    }
+    input::placeholder { color: #9ca3af; }
+    input:focus { border-color: #7c3aed; }
+    .toggle-pw { position: absolute; right: .85rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; display: inline-flex; opacity: .5; }
+    .toggle-pw:hover { opacity: .8; }
+    .toggle-pw img { width: 17px; height: 17px; }
+    .error-hint { font-size: .77rem; color: #ef4444; margin-top: .3rem; }
+    .remember-row { display: flex; align-items: center; gap: .55rem; font-size: .85rem; color: #374151; margin-bottom: 1.3rem; }
+    .remember-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: #7c3aed; }
+    .btn-primary {
+      width: 100%; padding: .78rem;
+      background: #7c3aed; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: .97rem; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+    }
+    .btn-primary:hover { background: #6d28d9; }
+    .btn-primary img { width: 17px; height: 17px; filter: brightness(0) invert(1); }
+    .divider { display: flex; align-items: center; gap: .75rem; margin: 1.1rem 0; color: #9ca3af; font-size: .75rem; font-weight: 600; letter-spacing: .05em; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+    .security-box {
+      background: #f9fafb; border-radius: 10px;
+      padding: .9rem 1rem; display: flex; gap: .75rem; align-items: flex-start;
+      font-size: .82rem; color: #374151; line-height: 1.55;
+    }
+    .security-box .sec-icon { display: inline-flex; flex-shrink: 0; opacity: .6; margin-top: .1rem; }
+    .security-box .sec-icon img { width: 17px; height: 17px; }
+    .security-box strong { display: block; margin-bottom: .2rem; color: #111; font-size: .85rem; }
+    .signup-row { text-align: center; margin-top: 1.1rem; font-size: .88rem; color: #6b7280; }
+    .signup-row a { color: #7c3aed; font-weight: 600; text-decoration: none; }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; font-size: .78rem; color: #9ca3af; }
+    .footer-links a { color: inherit; text-decoration: none; }
+    .footer-links a:hover { color: #7c3aed; }
+    .messages { margin-bottom: .9rem; }
+    .msg { padding: .55rem .9rem; border-radius: 8px; font-size: .86rem; margin-bottom: .4rem; }
+    .msg.error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .msg.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .msg.info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    @media (max-width: 860px) {
+      .top-bar { padding: .75rem 1rem; }
+      .back-link { font-size: .86rem; padding: .62rem .9rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <a href="{% url 'landing-page' %}" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+      Back to Landing Page
+    </a>
+  </div>
+
+  <div class="page-wrap">
+  <div class="card">
+    <!-- Left panel -->
+    <div class="panel-left">
+      <div class="logo">
+        <span class="logo-icon">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+        </span>
+        Peerly
+      </div>
+      <div>
+        <h2>Connect with your UQ peers instantly.</h2>
+        <p style="margin-top:.7rem">Join thousands of students from the University of Queensland on the most active campus social network.</p>
+      </div>
+      <div class="badge-list">
+        <div class="badge"><img src="{% static 'accounts/icons/shield.svg' %}" alt="" /> Verified UQ network only</div>
+        <div class="badge"><img src="{% static 'accounts/icons/lock.svg' %}" alt="" /> Secure SSO Integration</div>
+      </div>
+      <div class="campus-img">
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80" alt="University campus walkway" />
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="panel-right">
+      <div class="verified-badge">
+        <img src="{% static 'accounts/icons/check.svg' %}" alt="" /> Verified University Network
+      </div>
+      <h1>Sign in with your UQ Account</h1>
+      <p class="subtitle">Use your UQ student email and password to access Peerly.</p>
+
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+        <div class="msg {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="id_username">UQ Email Address</label>
+          <div class="input-wrap">
+            <span class="icon"><img class="icon-img" src="{% static 'accounts/icons/mail.svg' %}" alt="" /></span>
+            {{ form.username }}
+          </div>
+          {% if form.username.errors %}<p class="error-hint">{{ form.username.errors|join:", " }}</p>{% endif %}
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="login-password">Password</label>
+            <a href="#" class="forgot">Forgot Password?</a>
+          </div>
+          <div class="input-wrap">
+            <span class="icon"><img class="icon-img" src="{% static 'accounts/icons/lock.svg' %}" alt="" /></span>
+            {{ form.password }}
+            <button type="button" class="toggle-pw" onclick="togglePw('login-password', this)"><img src="{% static 'accounts/icons/eye.svg' %}" alt="Show password" /></button>
+          </div>
+          {% if form.password.errors %}<p class="error-hint">{{ form.password.errors|join:", " }}</p>{% endif %}
+          {% if form.non_field_errors %}<p class="error-hint">{{ form.non_field_errors|join:", " }}</p>{% endif %}
+        </div>
+
+        <div class="remember-row">
+          {{ form.remember_me }}
+          <label for="id_remember_me">Keep me signed in on this device</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Sign In <img src="{% static 'accounts/icons/arrow-right.svg' %}" alt="" /></button>
+      </form>
+
+      <div class="divider">SECURITY NOTICE</div>
+      <div class="security-box">
+        <span class="sec-icon"><img src="{% static 'accounts/icons/info.svg' %}" alt="" /></span>
+        <div>
+          <strong>Privacy &amp; Safety</strong>
+          Only verified UQ students can access the Peerly network. Your login credentials are encrypted and processed through UQ's secure authentication service.
+        </div>
+      </div>
+
+      <p class="signup-row">Don't have an account yet? <a href="{% url 'register' %}">Create a UQ Peerly account</a></p>
+
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">UQ Guidelines</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<script>
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    const img = btn.querySelector('img');
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      img.src = '{% static "accounts/icons/eye-off.svg" %}';
+      img.alt = 'Hide password';
+    } else {
+      inp.type = 'password';
+      img.src = '{% static "accounts/icons/eye.svg" %}';
+      img.alt = 'Show password';
+    }
+  }
+</script>
+</body>
+</html>
