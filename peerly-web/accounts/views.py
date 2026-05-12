@@ -28,8 +28,12 @@ def login_view(request):
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            is_first_login = user.last_login is None
             login(request, user)
             messages.success(request, f'Welcome back, {user.full_name}!')
+            if is_first_login:
+                request.session['needs_onboarding'] = True
+                return redirect('onboarding-step1')
             next_url = request.GET.get('next', 'dashboard')
             return redirect(next_url)
         else:
