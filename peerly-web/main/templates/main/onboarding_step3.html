@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peerly | Onboarding Step 3</title>
+    <link rel="stylesheet" href="{% static 'main/onboarding.css' %}">
+</head>
+<body>
+    <div class="dot-grid"></div>
+
+    <div class="onboarding-frame">
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="step-indicator">Onboarding: Step 3 (of 5)</span>
+            </div>
+            <div class="topbar-right">
+                <span class="login-text">Already have an account? <a href="#" class="login-link">Log in</a></span>
+            </div>
+        </header>
+
+        <main class="onboarding-container">
+            <div class="onboarding-content-centered">
+                <!-- Card Container -->
+                <div class="step-card">
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">STEP 3 OF 5</span>
+                            <span class="progress-percent">60% Complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+
+                    <h2>Add a profile photo</h2>
+                    <p class="form-description">Help your classmates and study buddies recognize you in the UQ student hub.</p>
+
+                    <!-- Photo Upload Section -->
+                    <div class="photo-upload-wrapper">
+                        <div class="photo-upload-circle">
+                            <div class="photo-upload-content">
+                                <svg class="camera-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                                <p class="upload-text">Upload Photo</p>
+                            </div>
+                            <input type="file" id="photo-input" class="photo-input" accept="image/*" style="display: none;">
+                            <button type="button" class="upload-btn" onclick="document.getElementById('photo-input').click();">
+                                <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="tips-box">
+                        <div class="tips-header">
+                            <span class="tips-icon">💝</span>
+                            <h4>Tips for a great photo</h4>
+                        </div>
+                        <ul class="tips-list">
+                            <li>
+                                <svg class="tip-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                </svg>
+                                <span>Make sure your face is visible and centered</span>
+                            </li>
+                            <li>
+                                <svg class="tip-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                </svg>
+                                <span>Use a plain background and good lighting</span>
+                            </li>
+                            <li>
+                                <svg class="tip-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                </svg>
+                                <span>Avoid using group photos or heavy filters</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <a href="{% url 'onboarding-step4' %}" class="btn-primary">Continue</a>
+                    <a href="{% url 'onboarding-step4' %}" class="btn-skip">Skip for now</a>
+
+                    <!-- Footer Navigation -->
+                    <footer class="step-footer">
+                        <a href="{% url 'onboarding-step2' %}" class="btn-back">← Back</a>
+                    </footer>
+                </div>
+            </div>
+
+            <!-- Testimonial -->
+            <div class="testimonial-box">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80" alt="User" class="testimonial-avatar">
+                <p class="testimonial-text">"Users with profile photos get 3x more study group invites on Peerly!"</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('photo-input').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const uploadCircle = document.querySelector('.photo-upload-circle');
+                    uploadCircle.style.backgroundImage = `url('${event.target.result}')`;
+                    uploadCircle.style.backgroundSize = 'cover';
+                    uploadCircle.style.backgroundPosition = 'center';
+                    document.querySelector('.photo-upload-content').style.display = 'none';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>

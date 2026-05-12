@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peerly | Onboarding</title>
+    <link rel="stylesheet" href="{% static 'main/onboarding.css' %}">
+</head>
+<body>
+    <div class="dot-grid"></div>
+
+    <div class="onboarding-frame">
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="step-indicator">Onboarding: Step 1 (of 5)</span>
+            </div>
+            <div class="topbar-right">
+                <span class="login-text">Already have an account? <a href="#" class="login-link">Log in</a></span>
+            </div>
+        </header>
+
+        <main class="onboarding-container">
+            <div class="onboarding-content">
+                <!-- Left Panel: Form -->
+                <div class="form-panel">
+                    <div class="branding-section">
+                        <img src="{% static 'main/peerly-logo.svg' %}" alt="Peerly" class="logo-small">
+                        <h1>Peerly</h1>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">Step 1 of 5</span>
+                            <span class="progress-percent">20% Complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <h2>Create your Peerly profile</h2>
+                    <p class="form-description">This is how you'll appear to your classmates and study groups. You can update these details anytime later.</p>
+
+                    <form class="profile-form">
+                        <div class="form-group">
+                            <label for="full-name">Full Name</label>
+                            <input type="text" id="full-name" placeholder="e.g. Alex Thompson" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username">Peerly Username</label>
+                            <input type="text" id="username" placeholder="@alex_uq2024" required>
+                            <small>Your unique handle for mentions and search.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio">About Me (Bio)</label>
+                            <textarea id="bio" placeholder="Tell us about your major, interests, or what you're looking for in a study buddy..." maxlength="250"></textarea>
+                            <div class="char-count"><span id="char-used">0</span> / 250</div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Right Panel: Sidebar -->
+                <aside class="sidebar-panel">
+                    <div class="promo-card">
+                        <div class="promo-icon">✨</div>
+                        <h3>Complete Profiles Win</h3>
+                        <p>Students with complete profiles get <span class="highlight">3x more study invites</span> and find clubs matching their interests 40% faster.</p>
+                    </div>
+
+                    <div class="promo-image">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" alt="Students collaborating">
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Footer: Navigation -->
+            <footer class="onboarding-footer">
+                <a href="{% url 'onboarding-step2' %}" class="btn-continue">Continue →</a>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const bioInput = document.getElementById('bio');
+        const charUsed = document.getElementById('char-used');
+        
+        bioInput.addEventListener('input', function() {
+            charUsed.textContent = this.value.length;
+        });
+    </script>
+</body>
+</html>

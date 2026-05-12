@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peerly | Onboarding Step 2</title>
+    <link rel="stylesheet" href="{% static 'main/onboarding.css' %}">
+</head>
+<body>
+    <div class="dot-grid"></div>
+
+    <div class="onboarding-frame">
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="step-indicator">Onboarding: Step 2 (of 5)</span>
+            </div>
+            <div class="topbar-right">
+                <span class="login-text">Already have an account? <a href="#" class="login-link">Log in</a></span>
+            </div>
+        </header>
+
+        <main class="onboarding-container">
+            <div class="onboarding-content-centered">
+                <!-- Card Container -->
+                <div class="step-card">
+                    <div class="card-header">
+                        <img src="{% static 'main/peerly-logo.svg' %}" alt="Peerly" class="logo-centered">
+                        <span class="branding-label">Peerly</span>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">STEP 2 OF 5</span>
+                            <span class="progress-percent">40% Complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
+
+                    <h2>Tell us about your studies</h2>
+                    <p class="form-description">Connecting you with classmates and resources starts with knowing your academic path.</p>
+
+                    <form class="profile-form">
+                        <div class="form-group">
+                            <label for="degree">Degree/Major</label>
+                            <input type="text" id="degree" placeholder="e.g., Bachelor of Computer Science" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="year">Current Year</label>
+                            <select id="year" required>
+                                <option value="">Select your year</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                                <option value="5">5th Year</option>
+                                <option value="postgrad">Postgraduate</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="info-box">
+                        <div class="info-icon">💡</div>
+                        <div class="info-content">
+                            <h4>Did you know?</h4>
+                            <p>Students in your major often join the UQ Tech Society. We'll show you relevant groups next.</p>
+                        </div>
+                    </div>
+
+                    <!-- Footer Navigation -->
+                    <footer class="step-footer">
+                        <a href="{% url 'onboarding-step1' %}" class="btn-back">← Back</a>
+                        <a href="{% url 'onboarding-step3' %}" class="btn-continue">Continue →</a>
+                    </footer>
+                </div>
+            </div>
+
+            <p class="help-text"><a href="#" class="help-link">Need help with your degree details?</a> <a href="#" class="help-link-secondary">Contact Student Hub</a></p>
+        </main>
+    </div>
+
+    <script>
+    </script>
+</body>
+</html>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

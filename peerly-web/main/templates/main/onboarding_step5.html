@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peerly | Onboarding Step 5</title>
+    <link rel="stylesheet" href="{% static 'main/onboarding.css' %}">
+</head>
+<body>
+    <div class="dot-grid"></div>
+
+    <div class="onboarding-frame">
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="step-indicator">Onboarding: Step 5 (of 5)</span>
+            </div>
+            <div class="topbar-right">
+                <span class="login-text">Already have an account? <a href="#" class="login-link">Log in</a></span>
+            </div>
+        </header>
+
+        <main class="onboarding-container">
+            <div class="onboarding-content step5-content">
+                <!-- Left Panel: Profile Preview -->
+                <div class="profile-preview-panel">
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">STEP 5 OF 5</span>
+                            <span class="progress-percent">100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Card -->
+                    <div class="profile-card-preview">
+                        <div class="profile-header-section">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80" alt="Profile" class="profile-photo-large">
+                            <div class="online-indicator"></div>
+                        </div>
+                        <div class="profile-info">
+                            <h3 class="profile-name">Alex Thompson</h3>
+                            <p class="profile-degree">Bachelor of Computer Science • UQ</p>
+                            <p class="profile-bio">Your bio will appear here... Tell everyone about your interests, what you're studying, or what you're looking for on Peerly!</p>
+                            <div class="interest-tags">
+                                <span class="tag">CS&E1001</span>
+                                <span class="tag">Web Dev</span>
+                                <span class="tag">Chess Club</span>
+                            </div>
+                        </div>
+                        <div class="profile-footer">
+                            <a href="#" class="profile-preview-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                Profile Preview
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Bio Form -->
+                <div class="bio-panel">
+                    <h2>Write a short bio</h2>
+                    <p class="form-description">Help others get to know you in a few words</p>
+
+                    <div class="form-group">
+                        <label for="bio-input">ABOUT YOU</label>
+                        <textarea id="bio-input" placeholder="I'm a second-year student passionate about software engineering and hiking on the weekends. Excited to join the Peerly community!" maxlength="300"></textarea>
+                        <div class="char-count-row">
+                            <span class="char-used">0 / 300 characters</span>
+                            <a href="#" class="keep-professional">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+                                </svg>
+                                Keep it professional yet social
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Info Cards -->
+                    <div class="info-cards-row">
+                        <div class="info-card-small">
+                            <div class="card-icon">💝</div>
+                            <h4>Mention your goals</h4>
+                            <p>Share if you're looking for study buddies or club members.</p>
+                        </div>
+                        <div class="info-card-small">
+                            <div class="card-icon">🎯</div>
+                            <h4>Share your hobbies</h4>
+                            <p>Hobbies are a great way to start conversations with classmates.</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="bio-footer">
+                        <a href="#" class="skip-link">Skip for now</a>
+                        <div class="button-group">
+                            <a href="{% url 'onboarding-step4' %}" class="btn-back">← Back</a>
+                            <a href="/" class="btn-continue">Continue →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const bioInput = document.getElementById('bio-input');
+        const charUsed = document.querySelector('.char-used');
+        
+        bioInput.addEventListener('input', function() {
+            charUsed.textContent = `${this.value.length} / 300 characters`;
+        });
+    </script>
+</body>
+</html>

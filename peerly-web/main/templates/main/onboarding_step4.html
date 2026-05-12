@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peerly | Onboarding Step 4</title>
+    <link rel="stylesheet" href="{% static 'main/onboarding.css' %}">
+</head>
+<body>
+    <div class="dot-grid"></div>
+
+    <div class="onboarding-frame">
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="step-indicator">Onboarding: Step 4 (of 5)</span>
+            </div>
+            <div class="topbar-right">
+                <span class="login-text">Already have an account? <a href="#" class="login-link">Log in</a></span>
+            </div>
+        </header>
+
+        <main class="onboarding-container">
+            <div class="onboarding-content step4-content">
+                <!-- Left Panel: Interests -->
+                <div class="interests-panel">
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label">STEP 4 OF 5</span>
+                            <span class="progress-percent">80% Complete</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+
+                    <h2>What are you into?</h2>
+                    <p class="form-description">Select your interests to find classmates, clubs, and events tailored to you. You can pick as many as you like.</p>
+
+                    <!-- Search Box -->
+                    <div class="search-interests">
+                        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="interest-search" placeholder="Search for interests (e.g. Hiking, Chess...)">
+                    </div>
+
+                    <!-- Interest Categories -->
+                    <div class="interests-container">
+                        <!-- Sport & Fitness -->
+                        <div class="category-section">
+                            <h3 class="category-title">SPORT & FITNESS</h3>
+                            <div class="interests-group">
+                                <button class="interest-chip" data-interest="surf">
+                                    <span class="chip-icon">🏄</span>
+                                    <span>Surf</span>
+                                </button>
+                                <button class="interest-chip interest-chip-selected" data-interest="basketball">
+                                    <span class="chip-icon">🏀</span>
+                                    <span>Basketball</span>
+                                    <span class="chip-close">×</span>
+                                </button>
+                                <button class="interest-chip" data-interest="gym">
+                                    <span class="chip-icon">💪</span>
+                                    <span>Gym</span>
+                                </button>
+                                <button class="interest-chip" data-interest="running">
+                                    <span class="chip-icon">🏃</span>
+                                    <span>Running</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Food & Drink -->
+                        <div class="category-section">
+                            <h3 class="category-title">FOOD & DRINK</h3>
+                            <div class="interests-group">
+                                <button class="interest-chip interest-chip-selected" data-interest="coffee-chat">
+                                    <span class="chip-icon">☕</span>
+                                    <span>Coffee Chat</span>
+                                    <span class="chip-close">×</span>
+                                </button>
+                                <button class="interest-chip" data-interest="cooking">
+                                    <span class="chip-icon">🍳</span>
+                                    <span>Cooking</span>
+                                </button>
+                                <button class="interest-chip" data-interest="baking">
+                                    <span class="chip-icon">🍰</span>
+                                    <span>Baking</span>
+                                </button>
+                                <button class="interest-chip" data-interest="foodies">
+                                    <span class="chip-icon">🍽️</span>
+                                    <span>Foodies</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Social & Lifestyle -->
+                        <div class="category-section">
+                            <h3 class="category-title">SOCIAL & LIFESTYLE</h3>
+                            <div class="interests-group">
+                                <button class="interest-chip" data-interest="hiking">
+                                    <span class="chip-icon">🥾</span>
+                                    <span>Hiking</span>
+                                </button>
+                                <button class="interest-chip interest-chip-selected" data-interest="photography">
+                                    <span class="chip-icon">📸</span>
+                                    <span>Photography</span>
+                                    <span class="chip-close">×</span>
+                                </button>
+                                <button class="interest-chip" data-interest="gaming">
+                                    <span class="chip-icon">🎮</span>
+                                    <span>Gaming</span>
+                                </button>
+                                <button class="interest-chip" data-interest="book-club">
+                                    <span class="chip-icon">📚</span>
+                                    <span>Book Club</span>
+                                </button>
+                                <button class="interest-chip" data-interest="art-design">
+                                    <span class="chip-icon">🎨</span>
+                                    <span>Art & Design</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <footer class="onboarding-footer">
+                        <a href="{% url 'onboarding-step3' %}" class="btn-back">← Back</a>
+                        <a href="{% url 'onboarding-step5' %}" class="btn-continue">Continue →</a>
+                    </footer>
+                </div>
+
+                <!-- Right Panel: Promo -->
+                <aside class="step4-promo">
+                    <div class="promo-header">
+                        <div class="promo-icon-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                            </svg>
+                        </div>
+                        <h3>Connect by Passion</h3>
+                        <p>Personalize your feed with what matters to you.</p>
+                    </div>
+
+                    <div class="promo-cards">
+                        <div class="promo-card-small">
+                            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=300&q=80" alt="Yoga & Wellness">
+                            <span class="card-label">Yoga & Wellness</span>
+                        </div>
+                        <div class="promo-card-small">
+                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=300&q=80" alt="Live Music">
+                            <span class="card-label">Live Music</span>
+                        </div>
+                    </div>
+
+                    <p class="promo-quote">"Peerly helped me find my weekend hiking crew and my exam study group all through my interest in coffee chats."</p>
+                    
+                    <div class="promo-testimonial">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80" alt="James Miller" class="testimonial-avatar-small">
+                        <div class="testimonial-info">
+                            <p class="testimonial-name">James Miller</p>
+                            <p class="testimonial-role">Computer Science, 2nd Year</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.interest-chip').forEach(chip => {
+            chip.addEventListener('click', function(e) {
+                if (e.target.closest('.chip-close')) {
+                    this.classList.remove('interest-chip-selected');
+                } else {
+                    this.classList.toggle('interest-chip-selected');
+                }
+            });
+        });
+
+        const searchInput = document.getElementById('interest-search');
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('.interest-chip').forEach(chip => {
+                const text = chip.textContent.toLowerCase();
+                chip.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
