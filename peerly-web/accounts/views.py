@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm
@@ -11,10 +11,9 @@ def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, 'Account created successfully! Welcome to Peerly.')
-            return redirect('dashboard')
+            form.save()
+            messages.success(request, 'Account created successfully. Please sign in to continue.')
+            return redirect('login')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
