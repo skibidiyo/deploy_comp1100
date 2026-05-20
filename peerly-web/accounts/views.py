@@ -47,7 +47,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, 'You have been signed out.')
-    return redirect('login')
+    return redirect('landing-page')
 
 
 @login_required

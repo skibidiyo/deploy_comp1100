@@ -87,6 +87,17 @@
         const yearSelect = document.getElementById('year');
         const continueBtn = document.getElementById('continueBtn');
 
+        // Load from localStorage on page load
+        window.addEventListener('load', function() {
+            const savedDegree = localStorage.getItem('peerly_degree');
+            const savedYear = localStorage.getItem('peerly_year');
+            
+            if (savedDegree) degreeInput.value = savedDegree;
+            if (savedYear) yearSelect.value = savedYear;
+            
+            validateForm();
+        });
+
         function validateForm() {
             const isFilled = degreeInput.value.trim() !== '' && yearSelect.value !== '';
             if (isFilled) {
@@ -107,7 +118,12 @@
             if (!degreeInput.value.trim() || !yearSelect.value) {
                 e.preventDefault();
                 alert('Please fill in all required fields');
+                return;
             }
+            
+            // Save to localStorage before navigating
+            localStorage.setItem('peerly_degree', degreeInput.value.trim());
+            localStorage.setItem('peerly_year', yearSelect.value);
         });
     </script>
 </body>

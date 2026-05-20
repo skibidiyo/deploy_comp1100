@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.exceptions import ValidationError
 import re
 
@@ -7,6 +7,26 @@ import re
 def validate_uq_email(value):
     if not re.match(r'^[^@]+@student\.uq\.edu\.au$', value):
         raise ValidationError('Only UQ student email addresses (@student.uq.edu.au) are allowed.')
+
+
+class PeerlyUserManager(BaseUserManager):
+    """Custom manager for PeerlyUser model."""
+    
+    def create_user(self, email, password=None, full_name='', **extra_fields):
+        """Create and save a regular user."""
+        if not email:
+            raise ValueError('Email is required')
+        email = self.normalize_email(email)
+        user = self.model(email=email, full_name=full_name, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_superuser(self, email, password=None, full_name='', **extra_fields):
+        """Create and save a superuser."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, password, full_name, **extra_fields)
 
 
 class PeerlyUser(AbstractUser):
@@ -20,6 +40,8 @@ class PeerlyUser(AbstractUser):
     )
     is_email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = PeerlyUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']

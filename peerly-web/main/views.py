@@ -1,12 +1,14 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
+import json
 
-from .models import Classmate, Course
+from .models import StudentProfile, Classmate, Course
 
 
 def _format_date_label(current_date):
@@ -75,6 +77,32 @@ def onboarding_step5(request):
 
 @login_required
 def complete_onboarding(request):
+	"""Complete onboarding and save StudentProfile to database"""
+	if request.method == 'POST':
+		# Get data from form submission (from localStorage)
+		degree = request.POST.get('degree', '')
+		year = request.POST.get('year', '')
+		bio = request.POST.get('bio', '')
+		interests_str = request.POST.get('interests', '')
+		classes_str = request.POST.get('classes', '')
+		
+		# Parse interests and classes from comma-separated strings
+		interests = [i.strip() for i in interests_str.split(',') if i.strip()] if interests_str else []
+		classes = [c.strip() for c in classes_str.split(',') if c.strip()] if classes_str else []
+		
+		# Create or update StudentProfile
+		try:
+			profile = request.user.profile
+		except StudentProfile.DoesNotExist:
+			profile = StudentProfile(user=request.user)
+		
+		profile.degree = degree
+		profile.year = year
+		profile.bio = bio
+		profile.interests = interests
+		profile.classes = classes
+		profile.save()
+	
 	request.session.pop('needs_onboarding', None)
 	return redirect('home')
 
@@ -86,6 +114,42 @@ def dashboard(request):
 @login_required
 def campus_events(request):
 	return render(request, 'main/campus_events.html')
+
+
+@login_required
+@require_http_methods(["POST"])
+def add_class(request):
+	"""Add a class code to the user's StudentProfile"""
+	try:
+		# Get the class code from POST data
+		class_code = request.POST.get('class_code', '').strip().upper()
+		
+		if not class_code:
+			return JsonResponse({'success': False, 'message': 'Class code is required'}, status=400)
+		
+		# Get or create the user's StudentProfile
+		try:
+			profile = request.user.profile
+		except StudentProfile.DoesNotExist:
+			profile = StudentProfile(user=request.user)
+		
+		# Add class code if not already present
+		if class_code not in profile.classes:
+			profile.classes.append(class_code)
+			profile.save()
+			return JsonResponse({
+				'success': True,
+				'message': f'Added {class_code}',
+				'class_code': class_code
+			})
+		else:
+			return JsonResponse({
+				'success': False,
+				'message': f'{class_code} already added'
+			}, status=400)
+			
+	except Exception as e:
+		return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
 
 @login_required

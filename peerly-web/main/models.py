@@ -1,4 +1,29 @@
 from django.db import models
+from accounts.models import PeerlyUser
+
+
+class StudentProfile(models.Model):
+	YEAR_CHOICES = [
+		('1', '1st Year'),
+		('2', '2nd Year'),
+		('3', '3rd Year'),
+		('4', '4th Year'),
+		('5', '5th Year'),
+		('postgrad', 'Postgraduate'),
+	]
+
+	user = models.OneToOneField(PeerlyUser, on_delete=models.CASCADE, related_name='profile')
+	degree = models.CharField(max_length=255, blank=True)
+	year = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True)
+	bio = models.TextField(max_length=500, blank=True)
+	interests = models.JSONField(default=list)
+	classes = models.JSONField(default=list)
+	profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	def __str__(self):
+		return f'{self.user.email} Profile'
 
 
 class Course(models.Model):

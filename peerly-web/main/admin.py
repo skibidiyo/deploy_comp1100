@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import Classmate, Course
+from .models import StudentProfile, Classmate, Course
+
+
+@admin.register(StudentProfile)
+class StudentProfileAdmin(admin.ModelAdmin):
+	list_display = ('user', 'degree', 'year', 'created_at')
+	search_fields = ('user__email', 'degree')
+	readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(Course)

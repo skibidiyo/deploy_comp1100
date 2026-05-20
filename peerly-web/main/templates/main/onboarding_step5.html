@@ -42,14 +42,21 @@
                     <h2>Write a short bio</h2>
                     <p class="form-description">Help others get to know you. Keep it professional yet social.</p>
 
-                    <form class="profile-form">
+                    <form method="POST" action="{% url 'complete-onboarding' %}" class="profile-form" id="bio-form">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="bio-input">About You</label>
-                            <textarea id="bio-input" placeholder="I'm a second-year student passionate about software engineering and hiking on the weekends. Excited to join the Peerly community!" maxlength="300"></textarea>
+                            <textarea id="bio-input" name="bio" placeholder="I'm a second-year student passionate about software engineering and hiking on the weekends. Excited to join the Peerly community!" maxlength="300"></textarea>
                             <div class="char-count-row">
                                 <span class="char-used">0 / 300 characters</span>
                             </div>
                         </div>
+                        
+                        <!-- Hidden fields to pass localStorage data to backend -->
+                        <input type="hidden" name="degree" id="hidden-degree" value="">
+                        <input type="hidden" name="year" id="hidden-year" value="">
+                        <input type="hidden" name="interests" id="hidden-interests" value="">
+                        <input type="hidden" name="classes" id="hidden-classes" value="">
                     </form>
 
                     <div class="info-box">
@@ -63,7 +70,7 @@
                     <!-- Footer Navigation -->
                     <footer class="step-footer">
                         <a href="{% url 'onboarding-step4' %}" class="btn-back">← Back</a>
-                        <a href="{% url 'complete-onboarding' %}" class="btn-continue">Continue →</a>
+                        <button type="submit" form="bio-form" class="btn-continue">Continue →</button>
                     </footer>
         </main>
     </div>
@@ -71,9 +78,37 @@
     <script>
         const bioInput = document.getElementById('bio-input');
         const charUsed = document.querySelector('.char-used');
+        const bioForm = document.getElementById('bio-form');
         
         bioInput.addEventListener('input', function() {
             charUsed.textContent = `${this.value.length} / 300 characters`;
+        });
+
+        // Load data from localStorage and populate hidden fields on page load
+        window.addEventListener('load', function() {
+            const degree = localStorage.getItem('peerly_degree') || '';
+            const year = localStorage.getItem('peerly_year') || '';
+            const interests = localStorage.getItem('peerly_interests') || '';
+            const classes = localStorage.getItem('peerly_classes') || '';
+            const bio = localStorage.getItem('peerly_bio') || '';
+            
+            // Set hidden field values
+            document.getElementById('hidden-degree').value = degree;
+            document.getElementById('hidden-year').value = year;
+            document.getElementById('hidden-interests').value = interests;
+            document.getElementById('hidden-classes').value = classes;
+            
+            // Set visible bio field
+            if (bio) {
+                bioInput.value = bio;
+                charUsed.textContent = `${bio.length} / 300 characters`;
+            }
+        });
+
+        // Before form submission, ensure localStorage bio is captured
+        bioForm.addEventListener('submit', function(e) {
+            // Save bio to localStorage before submitting
+            localStorage.setItem('peerly_bio', bioInput.value);
         });
     </script>
 </body>

@@ -216,7 +216,117 @@
     </div>
   </div>
 
+  <!-- Add a Class Modal -->
+  <div id="addClassModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add a Class</h2>
+        <button id="closeModal" class="close-btn">×</button>
+      </div>
+      <form id="addClassForm">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="classInput">Class Code</label>
+          <input type="text" id="classInput" name="class_code" placeholder="e.g., COMS2001" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+          <button type="submit" id="submitBtn" class="btn-submit" disabled>Add Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Notification -->
+  <div id="successNotification" class="success-notification" style="display: none;"></div>
+
   <script>
+    // Modal functionality
+    const modal = document.getElementById('addClassModal');
+    const addClassBtn = document.querySelector('.add-class-btn');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const addClassForm = document.getElementById('addClassForm');
+    const classInput = document.getElementById('classInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const successNotification = document.getElementById('successNotification');
+
+    // Open modal
+    addClassBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+      classInput.focus();
+    });
+
+    // Close modal
+    const closeModal = () => {
+      modal.style.display = 'none';
+      classInput.value = '';
+      submitBtn.disabled = true;
+    };
+
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Enable/disable submit button
+    classInput.addEventListener('input', () => {
+      submitBtn.disabled = !classInput.value.trim();
+    });
+
+    // Form submission
+    addClassForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const classCode = classInput.value.trim().toUpperCase();
+      const formData = new FormData();
+      formData.append('class_code', classCode);
+
+      // Get CSRF token
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+      try {
+        const response = await fetch('{% url "add-class" %}', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': csrfToken,
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Show success notification
+          successNotification.textContent = '✓ ' + data.message;
+          successNotification.style.display = 'block';
+          
+          // Save to localStorage
+          const classes = JSON.parse(localStorage.getItem('peerly_classes') || '[]');
+          if (!classes.includes(classCode)) {
+            classes.push(classCode);
+            localStorage.setItem('peerly_classes', JSON.stringify(classes));
+          }
+
+          // Close modal and reset
+          closeModal();
+
+          // Hide notification after 3 seconds
+          setTimeout(() => {
+            successNotification.style.display = 'none';
+          }, 3000);
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (error) {
+        alert('Error adding class: ' + error.message);
+      }
+    });
+
+    // Navigation active state
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', e => {
         if (item.href === '#') e.preventDefault();
@@ -225,5 +335,130 @@
       });
     });
   </script>
+
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #7C3AED;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel, .btn-submit {
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .btn-cancel {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-submit {
+      background: #7C3AED;
+      color: white;
+    }
+
+    .btn-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      animation: slideInRight 0.3s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
 </body>
 </html>

@@ -82,6 +82,17 @@
         const usernameInput = document.getElementById('username');
         const continueBtn = document.getElementById('continueBtn');
         
+        // Load from localStorage on page load
+        window.addEventListener('load', function() {
+            const savedName = localStorage.getItem('peerly_fullName');
+            const savedUsername = localStorage.getItem('peerly_username');
+            
+            if (savedName) fullNameInput.value = savedName;
+            if (savedUsername) usernameInput.value = savedUsername;
+            
+            validateForm();
+        });
+        
         function validateForm() {
             const isFilled = fullNameInput.value.trim() !== '' && usernameInput.value.trim() !== '';
             if (isFilled) {
@@ -102,7 +113,12 @@
             if (!fullNameInput.value.trim() || !usernameInput.value.trim()) {
                 e.preventDefault();
                 alert('Please fill in all required fields');
+                return;
             }
+            
+            // Save to localStorage before navigating
+            localStorage.setItem('peerly_fullName', fullNameInput.value.trim());
+            localStorage.setItem('peerly_username', usernameInput.value.trim());
         });
     </script>
 </body>

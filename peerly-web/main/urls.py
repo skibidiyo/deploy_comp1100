@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import campus_events, classmates_page, complete_onboarding, dashboard, landing_page, onboarding_step1, onboarding_step2, onboarding_step3, onboarding_step4, onboarding_step5, toggle_classmate_status
+from .views import campus_events, classmates_page, complete_onboarding, dashboard, landing_page, onboarding_step1, onboarding_step2, onboarding_step3, onboarding_step4, onboarding_step5, toggle_classmate_status, add_class
 
 urlpatterns = [
     path('', landing_page, name='landing-page'),
@@ -8,6 +8,7 @@ urlpatterns = [
     path('events/', campus_events, name='campus-events'),
     path('classmates/', classmates_page, name='classmates'),
     path('classmates/<int:classmate_id>/toggle/', toggle_classmate_status, name='toggle-classmate-status'),
+    path('add-class/', add_class, name='add-class'),
     path('onboarding/step1/', onboarding_step1, name='onboarding-step1'),
     path('onboarding/step2/', onboarding_step2, name='onboarding-step2'),
     path('onboarding/step3/', onboarding_step3, name='onboarding-step3'),

@@ -185,6 +185,21 @@
             }
         }
 
+        // Load from localStorage on page load
+        window.addEventListener('load', function() {
+            const savedInterests = localStorage.getItem('peerly_interests');
+            if (savedInterests) {
+                const interests = savedInterests.split(',').map(i => i.trim());
+                document.querySelectorAll('.interest-chip').forEach(chip => {
+                    const interest = chip.getAttribute('data-interest');
+                    if (interests.includes(interest)) {
+                        chip.classList.add('interest-chip-selected');
+                    }
+                });
+            }
+            validateInterests();
+        });
+
         document.querySelectorAll('.interest-chip').forEach(chip => {
             chip.addEventListener('click', function(e) {
                 if (e.target.closest('.chip-close')) {
@@ -210,7 +225,13 @@
             if (selectedCount === 0) {
                 e.preventDefault();
                 alert('Please select at least one interest');
+                return;
             }
+            
+            // Save selected interests to localStorage
+            const selected = Array.from(document.querySelectorAll('.interest-chip-selected'))
+                .map(chip => chip.getAttribute('data-interest'));
+            localStorage.setItem('peerly_interests', selected.join(', '));
         });
 
         // Initial validation
