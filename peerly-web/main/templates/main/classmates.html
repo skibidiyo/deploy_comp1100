@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peerly – Classmates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'main/classmates.css' %}" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-name">Peerly</div>
+      <div class="logo-sub">UQ Student Hub</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="{% url 'home' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21H3V9.75z"/></svg>
+        Home
+      </a>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        Chat
+      </a>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 100-8 4 4 0 000 8z"/></svg>
+        Groups
+      </a>
+      <a class="nav-item" href="{% url 'campus-events' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Events
+      </a>
+      <a class="nav-item active" href="{% url 'classmates' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14a4 4 0 100-8 4 4 0 000 8zm-7 7a7 7 0 0114 0"/></svg>
+        Classmates
+      </a>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.88 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Profile
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="add-class-btn" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add a Class
+      </button>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </a>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Help
+      </a>
+      <a class="nav-item" href="{% url 'logout' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <form class="search-bar" method="get" action="{% url 'classmates' %}">
+        {% if selected_course %}<input type="hidden" name="course" value="{{ selected_course.code }}" />{% endif %}
+        <input type="hidden" name="status" value="{{ status_filter }}" />
+        <input type="hidden" name="sort" value="{{ sort_by }}" />
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Search classmates..." />
+      </form>
+
+      <div class="topbar-nav">
+        <span class="topbar-link active">Discover</span>
+        <span class="topbar-link">Communities</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn notification" type="button" aria-label="Notifications">
+          <span class="dot"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button class="icon-btn" type="button" aria-label="Messages">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </button>
+        <div class="avatar" aria-label="{{ current_user_name }}">
+          <span>{{ current_user_initials }}</span>
+          <div class="avatar-online"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header-wrap">
+        <div>
+          <p class="eyebrow">{{ today_label }}</p>
+          {% if selected_course %}
+            <h1>{{ selected_course.code }}</h1>
+            <p>{{ selected_course.title }} — {{ selected_course.enrolled_classmates }} Enrolled Classmates</p>
+          {% else %}
+            <h1>Classmates</h1>
+            <p>Browse students in your shared courses.</p>
+          {% endif %}
+        </div>
+
+        <div class="toolbar">
+          <details class="control-menu">
+            <summary>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+              Filter
+            </summary>
+            <div class="menu-sheet">
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}sort={{ sort_by }}" class="menu-option {% if status_filter == 'all' %}active{% endif %}">All classmates</a>
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}status=connect&amp;sort={{ sort_by }}" class="menu-option {% if status_filter == 'connect' %}active{% endif %}">Ready to connect</a>
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}status=going&amp;sort={{ sort_by }}" class="menu-option {% if status_filter == 'going' %}active{% endif %}">Already going</a>
+            </div>
+          </details>
+
+          <details class="control-menu">
+            <summary>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M7 12h13"/><path d="M10 17h10"/></svg>
+              {% if sort_by == 'recent' %}Recent{% elif sort_by == 'name' %}Name{% elif sort_by == 'online' %}Online{% else %}Recommended{% endif %}
+            </summary>
+            <div class="menu-sheet">
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=recommended" class="menu-option {% if sort_by == 'recommended' %}active{% endif %}">Recommended</a>
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=recent" class="menu-option {% if sort_by == 'recent' %}active{% endif %}">Recent</a>
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=name" class="menu-option {% if sort_by == 'name' %}active{% endif %}">Name</a>
+              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=online" class="menu-option {% if sort_by == 'online' %}active{% endif %}">Online</a>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      {% if courses %}
+      <div class="course-tabs">
+        {% for course in courses %}
+          <a href="{% url 'classmates' %}?course={{ course.code }}" class="course-tab {% if selected_course and selected_course.pk == course.pk %}active{% endif %}">{{ course.code }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if classmates %}
+        <section class="classmates-grid">
+          {% for classmate in classmates %}
+            <article class="classmate-card">
+              <div class="card-top">
+                <div class="profile-wrap">
+                  <div class="profile-avatar" data-gradient="{{ classmate.avatar_gradient }}">
+                    <span>{{ classmate.avatar_initials }}</span>
+                    {% if classmate.is_online %}<span class="status-dot"></span>{% endif %}
+                  </div>
+                  <div class="shared-pill">Shared: {{ classmate.course.code }}</div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <h2>{{ classmate.full_name }}</h2>
+                <p>{{ classmate.degree_name }}</p>
+              </div>
+
+              <div class="card-actions">
+                <form method="post" action="{% url 'toggle-classmate-status' classmate.id %}" class="toggle-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <button type="submit" class="primary-btn {% if classmate.action_state == 'going' %}success{% endif %}">
+                    {% if classmate.action_state == 'going' %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                    {% endif %}
+                    {{ classmate.get_action_state_display }}
+                  </button>
+                </form>
+                <button type="button" class="message-btn" aria-label="Message {{ classmate.full_name }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </button>
+              </div>
+            </article>
+          {% endfor %}
+        </section>
+      {% else %}
+        <section class="empty-state">
+          <h2>No classmates match this filter</h2>
+          <p>Try a different search term, reset the filter, or switch to another course tab.</p>
+          <a class="reset-link" href="{% url 'classmates' %}{% if selected_course %}?course={{ selected_course.code }}{% endif %}">Reset classmates list</a>
+        </section>
+      {% endif %}
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.profile-avatar[data-gradient]').forEach((avatar) => {
+      avatar.style.background = avatar.dataset.gradient;
+    });
+  </script>
+</body>
+</html>
