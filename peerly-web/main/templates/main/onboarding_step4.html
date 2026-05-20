@@ -128,7 +128,7 @@
                     <!-- Navigation -->
                     <footer class="onboarding-footer">
                         <a href="{% url 'onboarding-step3' %}" class="btn-back">← Back</a>
-                        <a href="{% url 'onboarding-step5' %}" class="btn-continue">Continue →</a>
+                        <a href="{% url 'onboarding-step5' %}" class="btn-continue" id="continueBtn" disabled style="opacity: 0.5; cursor: not-allowed;">Continue →</a>
                     </footer>
                 </div>
 
@@ -170,6 +170,21 @@
     </div>
 
     <script>
+        const continueBtn = document.getElementById('continueBtn');
+
+        function validateInterests() {
+            const selectedCount = document.querySelectorAll('.interest-chip-selected').length;
+            if (selectedCount > 0) {
+                continueBtn.removeAttribute('disabled');
+                continueBtn.style.opacity = '1';
+                continueBtn.style.cursor = 'pointer';
+            } else {
+                continueBtn.setAttribute('disabled', 'true');
+                continueBtn.style.opacity = '0.5';
+                continueBtn.style.cursor = 'not-allowed';
+            }
+        }
+
         document.querySelectorAll('.interest-chip').forEach(chip => {
             chip.addEventListener('click', function(e) {
                 if (e.target.closest('.chip-close')) {
@@ -177,6 +192,7 @@
                 } else {
                     this.classList.toggle('interest-chip-selected');
                 }
+                validateInterests();
             });
         });
 
@@ -188,6 +204,17 @@
                 chip.style.display = text.includes(query) ? 'flex' : 'none';
             });
         });
+
+        continueBtn.addEventListener('click', function(e) {
+            const selectedCount = document.querySelectorAll('.interest-chip-selected').length;
+            if (selectedCount === 0) {
+                e.preventDefault();
+                alert('Please select at least one interest');
+            }
+        });
+
+        // Initial validation
+        validateInterests();
     </script>
 </body>
 </html>

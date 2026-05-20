@@ -7,7 +7,7 @@ from .forms import RegisterForm, LoginForm
 
 def register_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('home')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -23,7 +23,7 @@ def register_view(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('home')
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
@@ -34,7 +34,7 @@ def login_view(request):
             if is_first_login:
                 request.session['needs_onboarding'] = True
                 return redirect('onboarding-step1')
-            next_url = request.GET.get('next', 'dashboard')
+            next_url = request.GET.get('next', 'home')
             return redirect(next_url)
         else:
             messages.error(request, 'Invalid email or password.')

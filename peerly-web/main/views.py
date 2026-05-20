@@ -2,13 +2,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 def landing_page(request):
+	if request.user.is_authenticated:
+		return redirect('home')
 	return render(request, 'main/landing.html')
 
 def _redirect_if_onboarding_not_needed(request):
 	if not request.user.is_authenticated:
 		return redirect('login')
 	if not request.session.get('needs_onboarding'):
-		return redirect('dashboard')
+		return redirect('home')
 	return None
 
 @login_required
@@ -49,4 +51,13 @@ def onboarding_step5(request):
 @login_required
 def complete_onboarding(request):
 	request.session.pop('needs_onboarding', None)
-	return redirect('dashboard')
+	return redirect('home')
+
+@login_required
+def dashboard(request):
+	"""Home/Discover page shown after login or onboarding completion"""
+	return render(request, 'main/dashboard.html')
+
+@login_required
+def campus_events(request):
+	return render(request, 'main/campus_events.html')

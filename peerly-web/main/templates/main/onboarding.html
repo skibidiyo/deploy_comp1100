@@ -53,12 +53,6 @@
                             <input type="text" id="username" placeholder="@alex_uq2024" required>
                             <small>Your unique handle for mentions and search.</small>
                         </div>
-
-                        <div class="form-group">
-                            <label for="bio">About Me (Bio)</label>
-                            <textarea id="bio" placeholder="Tell us about your major, interests, or what you're looking for in a study buddy..." maxlength="250"></textarea>
-                            <div class="char-count"><span id="char-used">0</span> / 250</div>
-                        </div>
                     </form>
                 </div>
 
@@ -78,17 +72,37 @@
 
             <!-- Footer: Navigation -->
             <footer class="onboarding-footer">
-                <a href="{% url 'onboarding-step2' %}" class="btn-continue">Continue →</a>
+                <a href="{% url 'onboarding-step2' %}" class="btn-continue" id="continueBtn" disabled style="opacity: 0.5; cursor: not-allowed;">Continue →</a>
             </footer>
         </main>
     </div>
 
     <script>
-        const bioInput = document.getElementById('bio');
-        const charUsed = document.getElementById('char-used');
+        const fullNameInput = document.getElementById('full-name');
+        const usernameInput = document.getElementById('username');
+        const continueBtn = document.getElementById('continueBtn');
         
-        bioInput.addEventListener('input', function() {
-            charUsed.textContent = this.value.length;
+        function validateForm() {
+            const isFilled = fullNameInput.value.trim() !== '' && usernameInput.value.trim() !== '';
+            if (isFilled) {
+                continueBtn.removeAttribute('disabled');
+                continueBtn.style.opacity = '1';
+                continueBtn.style.cursor = 'pointer';
+            } else {
+                continueBtn.setAttribute('disabled', 'true');
+                continueBtn.style.opacity = '0.5';
+                continueBtn.style.cursor = 'not-allowed';
+            }
+        }
+        
+        fullNameInput.addEventListener('input', validateForm);
+        usernameInput.addEventListener('input', validateForm);
+
+        continueBtn.addEventListener('click', function(e) {
+            if (!fullNameInput.value.trim() || !usernameInput.value.trim()) {
+                e.preventDefault();
+                alert('Please fill in all required fields');
+            }
         });
     </script>
 </body>

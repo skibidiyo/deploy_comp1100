@@ -73,7 +73,7 @@
                     <!-- Footer Navigation -->
                     <footer class="step-footer">
                         <a href="{% url 'onboarding-step1' %}" class="btn-back">← Back</a>
-                        <a href="{% url 'onboarding-step3' %}" class="btn-continue">Continue →</a>
+                        <a href="{% url 'onboarding-step3' %}" class="btn-continue" id="continueBtn" disabled style="opacity: 0.5; cursor: not-allowed;">Continue →</a>
                     </footer>
                 </div>
             </div>
@@ -83,6 +83,32 @@
     </div>
 
     <script>
+        const degreeInput = document.getElementById('degree');
+        const yearSelect = document.getElementById('year');
+        const continueBtn = document.getElementById('continueBtn');
+
+        function validateForm() {
+            const isFilled = degreeInput.value.trim() !== '' && yearSelect.value !== '';
+            if (isFilled) {
+                continueBtn.removeAttribute('disabled');
+                continueBtn.style.opacity = '1';
+                continueBtn.style.cursor = 'pointer';
+            } else {
+                continueBtn.setAttribute('disabled', 'true');
+                continueBtn.style.opacity = '0.5';
+                continueBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        degreeInput.addEventListener('input', validateForm);
+        yearSelect.addEventListener('change', validateForm);
+
+        continueBtn.addEventListener('click', function(e) {
+            if (!degreeInput.value.trim() || !yearSelect.value) {
+                e.preventDefault();
+                alert('Please fill in all required fields');
+            }
+        });
     </script>
 </body>
 </html>
