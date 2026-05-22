@@ -74,8 +74,8 @@
         <input type="text" name="q" placeholder="Search for students, clubs, or courses..." />
       </form>
       <div class="topbar-nav">
-        <span class="topbar-link active">Discover</span>
-        <span class="topbar-link">Communities</span>
+        <button class="topbar-link active" id="tab-discover" type="button" onclick="switchTab('discover')">Discover</button>
+        <button class="topbar-link" id="tab-communities" type="button" onclick="switchTab('communities')">Communities</button>
       </div>
       <div class="topbar-actions">
         <button class="icon-btn notification" type="button" aria-label="Notifications">
@@ -95,13 +95,25 @@
     <!-- Page content -->
     <div class="page-content">
 
-      <div class="page-header">
+      <div class="page-header" id="page-header-discover">
         <h1>Discover Feed</h1>
         <p>Meet your peers and find study groups</p>
       </div>
+      <div class="page-header" id="page-header-communities" style="display:none;">
+        <div class="page-header-row">
+          <div>
+            <h1>Communities</h1>
+            <p>Clubs, societies, and groups at UQ</p>
+          </div>
+          <button class="create-community-btn" id="createCommunityBtn" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Community
+          </button>
+        </div>
+      </div>
 
       <!-- Main grid -->
-      <div class="discover-grid">
+      <div class="discover-grid" id="panel-discover">
 
         <!-- Left: Discover matches -->
         <div class="discover-section">
@@ -210,6 +222,32 @@
         </div>
 
       </div>
+
+      <!-- Communities Panel -->
+      <div id="panel-communities" style="display:none; margin-top:28px;">
+        <div class="communities-grid" id="communitiesGrid">
+          {% for community in communities %}
+          <div class="community-card" data-community-id="{{ community.id }}">
+            <div class="community-banner" data-gradient="{{ community.gradient }}">{{ community.emoji }}</div>
+            <div class="community-body">
+              <div class="community-name">{{ community.name }}</div>
+              <span class="community-tag">{{ community.category }}</span>
+              <div class="community-desc">{{ community.description|default:"No description yet." }}</div>
+              <div class="community-foot">
+                <span class="community-members">{{ community.members.count }} member{{ community.members.count|pluralize }}</span>
+                <button class="community-join-btn {% if community.id in user_community_ids %}joined{% endif %}"
+                        data-id="{{ community.id }}">
+                  {% if community.id in user_community_ids %}Joined ✓{% else %}Join{% endif %}
+                </button>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <p style="font-size:14px;color:#999;grid-column:1/-1;">No communities yet. Be the first to create one!</p>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -236,6 +274,46 @@
 
   <!-- Success Notification -->
   <div id="successNotification" class="success-notification" style="display: none;"></div>
+
+  <!-- Create Community Modal -->
+  <div id="communityModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New Community</h2>
+        <button id="closeCommunityModal" class="close-btn">×</button>
+      </div>
+      <div class="modal-form-group">
+        <label for="communityEmoji">Icon (emoji)</label>
+        <input type="text" id="communityEmoji" placeholder="e.g. 🎮" maxlength="2">
+      </div>
+      <div class="modal-form-group">
+        <label for="communityName">Community Name</label>
+        <input type="text" id="communityName" placeholder="e.g. UQ Game Dev Club">
+      </div>
+      <div class="modal-form-group">
+        <label for="communityCategory">Category</label>
+        <select id="communityCategory">
+          <option value="">Select a category</option>
+          <option value="Tech &amp; Academic">Tech &amp; Academic</option>
+          <option value="Arts &amp; Culture">Arts &amp; Culture</option>
+          <option value="Sports">Sports</option>
+          <option value="Business">Business</option>
+          <option value="Music &amp; Arts">Music &amp; Arts</option>
+          <option value="Social">Social</option>
+          <option value="Wellness">Wellness</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="modal-form-group">
+        <label for="communityDesc">Description</label>
+        <input type="text" id="communityDesc" placeholder="What's this community about?">
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="cancelCommunityBtn" class="btn-cancel">Cancel</button>
+        <button type="button" id="submitCommunityBtn" class="btn-submit">Create</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Create Study Session Modal -->
   <div id="sessionModal" class="modal-overlay" style="display:none;">
@@ -273,6 +351,123 @@
   </div>
 
   <script>
+    function switchTab(tab) {
+      const isDiscover = tab === 'discover';
+      document.getElementById('panel-discover').style.display = isDiscover ? 'grid' : 'none';
+      document.getElementById('panel-communities').style.display = isDiscover ? 'none' : 'block';
+      document.getElementById('page-header-discover').style.display = isDiscover ? 'block' : 'none';
+      document.getElementById('page-header-communities').style.display = isDiscover ? 'none' : 'block';
+      document.getElementById('tab-discover').classList.toggle('active', isDiscover);
+      document.getElementById('tab-communities').classList.toggle('active', !isDiscover);
+    }
+
+    // Apply gradients to community banners
+    document.querySelectorAll('.community-banner[data-gradient]').forEach(el => {
+      el.style.background = el.dataset.gradient;
+    });
+
+    // Community join/leave (backend)
+    document.addEventListener('click', async e => {
+      if (!e.target.classList.contains('community-join-btn')) return;
+      const btn = e.target;
+      const id = btn.dataset.id;
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      try {
+        const res = await fetch(`/communities/${id}/toggle/`, {
+          method: 'POST',
+          headers: { 'X-CSRFToken': csrfToken },
+        });
+        const data = await res.json();
+        if (data.success) {
+          btn.classList.toggle('joined', data.joined);
+          btn.textContent = data.joined ? 'Joined ✓' : 'Join';
+          const countEl = btn.closest('.community-foot').querySelector('.community-members');
+          if (countEl) countEl.textContent = `${data.count} member${data.count !== 1 ? 's' : ''}`;
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+
+    // Create Community modal
+    const communityModal = document.getElementById('communityModal');
+    const createCommunityBtn = document.getElementById('createCommunityBtn');
+    const closeCommunityModal = document.getElementById('closeCommunityModal');
+    const cancelCommunityBtn = document.getElementById('cancelCommunityBtn');
+    const submitCommunityBtn = document.getElementById('submitCommunityBtn');
+
+    const COMMUNITY_GRADIENTS = [
+      'linear-gradient(135deg,#667eea,#764ba2)',
+      'linear-gradient(135deg,#f093fb,#f5576c)',
+      'linear-gradient(135deg,#43e97b,#38f9d7)',
+      'linear-gradient(135deg,#4facfe,#00f2fe)',
+      'linear-gradient(135deg,#fa709a,#fee140)',
+      'linear-gradient(135deg,#a18cd1,#fbc2eb)',
+      'linear-gradient(135deg,#fd7043,#ff8a65)',
+      'linear-gradient(135deg,#26c6da,#00acc1)',
+    ];
+
+    const openCommunityModal = () => { communityModal.style.display = 'flex'; };
+    const closeCommunity = () => {
+      communityModal.style.display = 'none';
+      ['communityEmoji','communityName','communityDesc'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('communityCategory').value = '';
+    };
+
+    if (createCommunityBtn) createCommunityBtn.addEventListener('click', openCommunityModal);
+    closeCommunityModal.addEventListener('click', closeCommunity);
+    cancelCommunityBtn.addEventListener('click', closeCommunity);
+    communityModal.addEventListener('click', e => { if (e.target === communityModal) closeCommunity(); });
+
+    submitCommunityBtn.addEventListener('click', async () => {
+      const name = document.getElementById('communityName').value.trim();
+      const category = document.getElementById('communityCategory').value;
+      const description = document.getElementById('communityDesc').value.trim();
+      const emoji = document.getElementById('communityEmoji').value.trim() || '🌟';
+
+      if (!name || !category) {
+        alert('Please enter a name and category.');
+        return;
+      }
+
+      const gradient = COMMUNITY_GRADIENTS[Math.floor(Math.random() * COMMUNITY_GRADIENTS.length)];
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      try {
+        const res = await fetch('{% url "create-community" %}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+          body: JSON.stringify({ name, category, description, emoji, gradient }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          const c = data.community;
+          const card = document.createElement('div');
+          card.className = 'community-card';
+          card.dataset.communityId = c.id;
+          card.innerHTML = `
+            <div class="community-banner" style="background:${c.gradient};">${c.emoji}</div>
+            <div class="community-body">
+              <div class="community-name">${c.name}</div>
+              <span class="community-tag">${c.category}</span>
+              <div class="community-desc">${c.description || 'No description yet.'}</div>
+              <div class="community-foot">
+                <span class="community-members">1 member</span>
+                <button class="community-join-btn joined" data-id="${c.id}">Joined ✓</button>
+              </div>
+            </div>`;
+          document.getElementById('communitiesGrid').prepend(card);
+          closeCommunity();
+          successNotification.textContent = '✓ Community created!';
+          successNotification.style.display = 'block';
+          setTimeout(() => { successNotification.style.display = 'none'; }, 3000);
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+
     let currentMatch = null;
 
     // Load initial match

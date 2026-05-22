@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST, require_http_methods
 import json
 
 from accounts.models import PeerlyUser
-from .models import StudentProfile, DiscoverAction, StudySession
+from .models import StudentProfile, DiscoverAction, StudySession, Community, CommunityMembership
 
 
 def _format_date_label(current_date):
@@ -150,12 +150,19 @@ def dashboard(request):
 		.prefetch_related('attendees')[:3]
 	) if user_classes else []
 
+	communities = Community.objects.prefetch_related('members').all()
+	user_community_ids = set(
+		Community.objects.filter(members=request.user).values_list('id', flat=True)
+	)
+
 	return render(request, 'main/dashboard.html', {
 		'current_user_name': current_user_name,
 		'current_user_initials': _initials_for_name(current_user_name),
 		'suggested_classmates': _suggested_classmates(request.user),
 		'upcoming_sessions': upcoming_sessions,
 		'user_classes': user_classes,
+		'communities': communities,
+		'user_community_ids': user_community_ids,
 	})
 
 
@@ -418,6 +425,59 @@ def submit_discover_action(request):
 		return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
 	except Exception as e:
 		return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+@login_required
+@require_POST
+def create_community(request):
+	try:
+		data = json.loads(request.body)
+		name = data.get('name', '').strip()
+		category = data.get('category', '').strip()
+		description = data.get('description', '').strip()
+		emoji = data.get('emoji', '🌟').strip() or '🌟'
+		gradient = data.get('gradient', '').strip()
+
+		if not name or not category:
+			return JsonResponse({'success': False, 'message': 'Name and category are required'}, status=400)
+
+		community = Community.objects.create(
+			name=name,
+			category=category,
+			description=description,
+			emoji=emoji,
+			gradient=gradient,
+			creator=request.user,
+		)
+		CommunityMembership.objects.create(user=request.user, community=community)
+		return JsonResponse({
+			'success': True,
+			'community': {
+				'id': community.id,
+				'name': community.name,
+				'category': community.category,
+				'description': community.description,
+				'emoji': community.emoji,
+				'gradient': community.gradient,
+				'member_count': 1,
+			}
+		})
+	except Exception as e:
+		return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+@login_required
+@require_POST
+def toggle_community(request, community_id):
+	community = get_object_or_404(Community, pk=community_id)
+	membership = CommunityMembership.objects.filter(user=request.user, community=community).first()
+	if membership:
+		membership.delete()
+		joined = False
+	else:
+		CommunityMembership.objects.create(user=request.user, community=community)
+		joined = True
+	return JsonResponse({'success': True, 'joined': joined, 'count': community.members.count()})
 
 
 @login_required

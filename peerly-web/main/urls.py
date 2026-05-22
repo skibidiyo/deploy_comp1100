@@ -5,6 +5,7 @@ from .views import (
     onboarding_step1, onboarding_step2, onboarding_step3, onboarding_step4, onboarding_step5,
     add_class, get_discover_match, submit_discover_action, get_discover_stats,
     create_study_session, toggle_study_session,
+    create_community, toggle_community,
 )
 
 urlpatterns = [
@@ -24,4 +25,6 @@ urlpatterns = [
     path('onboarding/complete/', complete_onboarding, name='complete-onboarding'),
     path('study-sessions/create/', create_study_session, name='create-study-session'),
     path('study-sessions/<int:session_id>/toggle/', toggle_study_session, name='toggle-study-session'),
+    path('communities/create/', create_community, name='create-community'),
+    path('communities/<int:community_id>/toggle/', toggle_community, name='toggle-community'),
 ]

@@ -81,6 +81,36 @@ class StudySession(models.Model):
 		return f'{self.title} ({self.course_code})'
 
 
+class Community(models.Model):
+	name = models.CharField(max_length=255)
+	category = models.CharField(max_length=100)
+	description = models.TextField(max_length=500, blank=True)
+	emoji = models.CharField(max_length=10, default='🌟')
+	gradient = models.CharField(max_length=120, default='linear-gradient(135deg,#667eea,#764ba2)')
+	creator = models.ForeignKey(PeerlyUser, on_delete=models.CASCADE, related_name='created_communities')
+	members = models.ManyToManyField(PeerlyUser, through='CommunityMembership', related_name='joined_communities', blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		ordering = ['-created_at']
+
+	def __str__(self):
+		return self.name
+
+
+class CommunityMembership(models.Model):
+	user = models.ForeignKey(PeerlyUser, on_delete=models.CASCADE, related_name='community_memberships')
+	community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='memberships')
+	joined_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		unique_together = ('user', 'community')
+		ordering = ['-joined_at']
+
+	def __str__(self):
+		return f'{self.user.email} → {self.community.name}'
+
+
 class DiscoverAction(models.Model):
 	"""Track likes, passes, and superlikes on the discover page"""
 	class ActionType(models.TextChoices):
