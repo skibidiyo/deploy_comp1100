@@ -53,6 +53,18 @@ class ClassmatesPageTests(TestCase):
 		self.assertContains(response, 'Sarah Chen')
 		self.assertNotContains(response, 'James Wilson')
 
+	def test_dashboard_renders_current_user_avatar_initials(self):
+		self.client.force_login(self.user)
+		response = self.client.get(reverse('home'))
+		self.assertContains(response, 'aria-label="Test Student"')
+		self.assertContains(response, '<span>TS</span>', html=True)
+
+	def test_campus_events_renders_current_user_avatar_initials(self):
+		self.client.force_login(self.user)
+		response = self.client.get(reverse('campus-events'))
+		self.assertContains(response, 'aria-label="Test Student"')
+		self.assertContains(response, '<span>TS</span>', html=True)
+
 	def test_toggle_classmate_status_changes_connect_to_going(self):
 		self.client.force_login(self.user)
 		response = self.client.post(

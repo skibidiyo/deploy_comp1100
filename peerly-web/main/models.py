@@ -59,3 +59,39 @@ class Classmate(models.Model):
 
 	def __str__(self):
 		return f'{self.full_name} ({self.course.code})'
+
+
+class StudySession(models.Model):
+	title = models.CharField(max_length=255)
+	course_code = models.CharField(max_length=20)
+	location = models.CharField(max_length=255, blank=True)
+	scheduled_at = models.DateTimeField()
+	host = models.ForeignKey(PeerlyUser, on_delete=models.CASCADE, related_name='hosted_sessions')
+	attendees = models.ManyToManyField(PeerlyUser, related_name='joined_sessions', blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		ordering = ['scheduled_at']
+
+	def __str__(self):
+		return f'{self.title} ({self.course_code})'
+
+
+class DiscoverAction(models.Model):
+	"""Track likes, passes, and superlikes on the discover page"""
+	class ActionType(models.TextChoices):
+		PASS = 'pass', 'Pass'
+		LIKE = 'like', 'Like'
+		SUPERLIKE = 'superlike', 'Superlike'
+
+	user = models.ForeignKey(PeerlyUser, on_delete=models.CASCADE, related_name='discover_actions')
+	target_user = models.ForeignKey(PeerlyUser, on_delete=models.CASCADE, related_name='received_actions')
+	action_type = models.CharField(max_length=20, choices=ActionType.choices)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		unique_together = ('user', 'target_user')
+		ordering = ['-created_at']
+
+	def __str__(self):
+		return f'{self.user.email} {self.action_type} {self.target_user.email}'

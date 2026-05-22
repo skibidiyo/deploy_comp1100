@@ -45,19 +45,108 @@
                     <form class="profile-form">
                         <div class="form-group">
                             <label for="degree">Degree/Major</label>
-                            <input type="text" id="degree" placeholder="e.g., Bachelor of Computer Science" required>
+                            <select id="degree" required>
+                                <option value="">Select your degree</option>
+                                <optgroup label="Business, Economics & Law">
+                                    <option value="Bachelor of Business Management">Bachelor of Business Management</option>
+                                    <option value="Bachelor of Commerce">Bachelor of Commerce</option>
+                                    <option value="Bachelor of Economics">Bachelor of Economics</option>
+                                    <option value="Bachelor of Laws (LLB)">Bachelor of Laws (LLB)</option>
+                                    <option value="Bachelor of Advanced Finance and Economics">Bachelor of Advanced Finance and Economics</option>
+                                    <option value="Bachelor of Tourism, Hotel and Event Management">Bachelor of Tourism, Hotel and Event Management</option>
+                                    <option value="Master of Business Administration (MBA)">Master of Business Administration (MBA)</option>
+                                    <option value="Master of Commerce">Master of Commerce</option>
+                                    <option value="Master of Laws">Master of Laws</option>
+                                </optgroup>
+                                <optgroup label="Engineering, Architecture & IT">
+                                    <option value="Bachelor of Engineering (Civil)">Bachelor of Engineering (Civil)</option>
+                                    <option value="Bachelor of Engineering (Chemical)">Bachelor of Engineering (Chemical)</option>
+                                    <option value="Bachelor of Engineering (Electrical)">Bachelor of Engineering (Electrical)</option>
+                                    <option value="Bachelor of Engineering (Mechanical)">Bachelor of Engineering (Mechanical)</option>
+                                    <option value="Bachelor of Engineering (Software)">Bachelor of Engineering (Software)</option>
+                                    <option value="Bachelor of Engineering (Mechatronic)">Bachelor of Engineering (Mechatronic)</option>
+                                    <option value="Bachelor of Engineering (Biomedical)">Bachelor of Engineering (Biomedical)</option>
+                                    <option value="Bachelor of Engineering (Environmental)">Bachelor of Engineering (Environmental)</option>
+                                    <option value="Bachelor of Engineering (Mining)">Bachelor of Engineering (Mining)</option>
+                                    <option value="Bachelor of Computer Science">Bachelor of Computer Science</option>
+                                    <option value="Bachelor of Information Technology">Bachelor of Information Technology</option>
+                                    <option value="Bachelor of Architecture">Bachelor of Architecture</option>
+                                    <option value="Bachelor of Design">Bachelor of Design</option>
+                                    <option value="Master of Engineering">Master of Engineering</option>
+                                    <option value="Master of Architecture">Master of Architecture</option>
+                                    <option value="Master of Information Technology">Master of Information Technology</option>
+                                </optgroup>
+                                <optgroup label="Health & Behavioural Sciences">
+                                    <option value="Bachelor of Biomedical Science">Bachelor of Biomedical Science</option>
+                                    <option value="Bachelor of Exercise and Sport Science">Bachelor of Exercise and Sport Science</option>
+                                    <option value="Bachelor of Health Sciences">Bachelor of Health Sciences</option>
+                                    <option value="Bachelor of Nursing">Bachelor of Nursing</option>
+                                    <option value="Bachelor of Occupational Therapy">Bachelor of Occupational Therapy</option>
+                                    <option value="Bachelor of Pharmacy">Bachelor of Pharmacy</option>
+                                    <option value="Bachelor of Physiotherapy">Bachelor of Physiotherapy</option>
+                                    <option value="Bachelor of Psychological Science">Bachelor of Psychological Science</option>
+                                    <option value="Bachelor of Speech Pathology">Bachelor of Speech Pathology</option>
+                                    <option value="Bachelor of Social Work">Bachelor of Social Work</option>
+                                    <option value="Bachelor of Midwifery">Bachelor of Midwifery</option>
+                                    <option value="Master of Counselling">Master of Counselling</option>
+                                    <option value="Master of Physiotherapy Studies">Master of Physiotherapy Studies</option>
+                                </optgroup>
+                                <optgroup label="Humanities & Social Sciences">
+                                    <option value="Bachelor of Arts">Bachelor of Arts</option>
+                                    <option value="Bachelor of Communication">Bachelor of Communication</option>
+                                    <option value="Bachelor of Education (Primary)">Bachelor of Education (Primary)</option>
+                                    <option value="Bachelor of Education (Secondary)">Bachelor of Education (Secondary)</option>
+                                    <option value="Bachelor of Journalism">Bachelor of Journalism</option>
+                                    <option value="Bachelor of Music">Bachelor of Music</option>
+                                    <option value="Bachelor of Social Science">Bachelor of Social Science</option>
+                                    <option value="Bachelor of Languages and Cultures">Bachelor of Languages and Cultures</option>
+                                    <option value="Bachelor of International Studies">Bachelor of International Studies</option>
+                                    <option value="Master of Arts">Master of Arts</option>
+                                    <option value="Master of Education">Master of Education</option>
+                                    <option value="Master of Social Work">Master of Social Work</option>
+                                </optgroup>
+                                <optgroup label="Medicine">
+                                    <option value="Doctor of Medicine (MD)">Doctor of Medicine (MD)</option>
+                                    <option value="Bachelor of Dental Science">Bachelor of Dental Science</option>
+                                    <option value="Doctor of Dental Medicine">Doctor of Dental Medicine</option>
+                                </optgroup>
+                                <optgroup label="Science">
+                                    <option value="Bachelor of Science">Bachelor of Science</option>
+                                    <option value="Bachelor of Advanced Science">Bachelor of Advanced Science</option>
+                                    <option value="Bachelor of Mathematics">Bachelor of Mathematics</option>
+                                    <option value="Bachelor of Environmental Management">Bachelor of Environmental Management</option>
+                                    <option value="Bachelor of Food Technology">Bachelor of Food Technology</option>
+                                    <option value="Bachelor of Science (Marine Science)">Bachelor of Science (Marine Science)</option>
+                                    <option value="Doctor of Veterinary Medicine (DVM)">Doctor of Veterinary Medicine (DVM)</option>
+                                    <option value="Master of Science">Master of Science</option>
+                                </optgroup>
+                                <optgroup label="Agriculture & Food">
+                                    <option value="Bachelor of Agricultural Science">Bachelor of Agricultural Science</option>
+                                    <option value="Bachelor of Science (Agricultural Science)">Bachelor of Science (Agricultural Science)</option>
+                                </optgroup>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label for="year">Current Year</label>
                             <select id="year" required>
                                 <option value="">Select your year</option>
-                                <option value="1">1st Year</option>
-                                <option value="2">2nd Year</option>
-                                <option value="3">3rd Year</option>
-                                <option value="4">4th Year</option>
-                                <option value="5">5th Year</option>
-                                <option value="postgrad">Postgraduate</option>
+                                <optgroup label="Undergraduate">
+                                    <option value="1">Year 1</option>
+                                    <option value="2">Year 2</option>
+                                    <option value="3">Year 3</option>
+                                    <option value="4">Year 4</option>
+                                    <option value="5">Year 5 (Dentistry / Vet)</option>
+                                    <option value="honours">Honours Year</option>
+                                </optgroup>
+                                <optgroup label="Postgraduate">
+                                    <option value="pgc">Postgraduate Coursework</option>
+                                    <option value="phd">PhD / MPhil</option>
+                                </optgroup>
+                                <optgroup label="Special Enrollment">
+                                    <option value="international">International Student</option>
+                                    <option value="double-degree">Double Degree</option>
+                                </optgroup>
                             </select>
                         </div>
                     </form>
@@ -83,23 +172,12 @@
     </div>
 
     <script>
-        const degreeInput = document.getElementById('degree');
+        const degreeSelect = document.getElementById('degree');
         const yearSelect = document.getElementById('year');
         const continueBtn = document.getElementById('continueBtn');
 
-        // Load from localStorage on page load
-        window.addEventListener('load', function() {
-            const savedDegree = localStorage.getItem('peerly_degree');
-            const savedYear = localStorage.getItem('peerly_year');
-            
-            if (savedDegree) degreeInput.value = savedDegree;
-            if (savedYear) yearSelect.value = savedYear;
-            
-            validateForm();
-        });
-
         function validateForm() {
-            const isFilled = degreeInput.value.trim() !== '' && yearSelect.value !== '';
+            const isFilled = degreeSelect.value !== '' && yearSelect.value !== '';
             if (isFilled) {
                 continueBtn.removeAttribute('disabled');
                 continueBtn.style.opacity = '1';
@@ -111,18 +189,24 @@
             }
         }
 
-        degreeInput.addEventListener('input', validateForm);
+        degreeSelect.addEventListener('change', validateForm);
         yearSelect.addEventListener('change', validateForm);
 
+        window.addEventListener('load', function() {
+            const savedDegree = localStorage.getItem('peerly_degree');
+            const savedYear = localStorage.getItem('peerly_year');
+            if (savedDegree) degreeSelect.value = savedDegree;
+            if (savedYear) yearSelect.value = savedYear;
+            validateForm();
+        });
+
         continueBtn.addEventListener('click', function(e) {
-            if (!degreeInput.value.trim() || !yearSelect.value) {
+            if (!degreeSelect.value || !yearSelect.value) {
                 e.preventDefault();
                 alert('Please fill in all required fields');
                 return;
             }
-            
-            // Save to localStorage before navigating
-            localStorage.setItem('peerly_degree', degreeInput.value.trim());
+            localStorage.setItem('peerly_degree', degreeSelect.value);
             localStorage.setItem('peerly_year', yearSelect.value);
         });
     </script>

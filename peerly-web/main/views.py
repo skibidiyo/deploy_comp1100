@@ -1,14 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from django.views.decorators.http import require_POST, require_http_methods
 import json
 
-from .models import StudentProfile, Classmate, Course
+from accounts.models import PeerlyUser
+from .models import StudentProfile, DiscoverAction, StudySession
 
 
 def _format_date_label(current_date):
@@ -86,9 +84,14 @@ def complete_onboarding(request):
 		interests_str = request.POST.get('interests', '')
 		classes_str = request.POST.get('classes', '')
 		
-		# Parse interests and classes from comma-separated strings
+		# Parse interests from comma-separated string
 		interests = [i.strip() for i in interests_str.split(',') if i.strip()] if interests_str else []
-		classes = [c.strip() for c in classes_str.split(',') if c.strip()] if classes_str else []
+		# Parse classes — handle both JSON array (from dashboard localStorage) and comma-separated
+		try:
+			parsed = json.loads(classes_str)
+			classes = [str(c).strip() for c in parsed if str(c).strip()] if isinstance(parsed, list) else []
+		except (json.JSONDecodeError, ValueError):
+			classes = [c.strip() for c in classes_str.split(',') if c.strip()] if classes_str else []
 		
 		# Create or update StudentProfile
 		try:
@@ -106,14 +109,106 @@ def complete_onboarding(request):
 	request.session.pop('needs_onboarding', None)
 	return redirect('home')
 
+def _suggested_classmates(user, limit=5):
+	try:
+		user_classes = set(user.profile.classes or [])
+	except StudentProfile.DoesNotExist:
+		return []
+	if not user_classes:
+		return []
+	already_seen = set(DiscoverAction.objects.filter(user=user).values_list('target_user_id', flat=True))
+	results = []
+	for profile in StudentProfile.objects.exclude(user=user).select_related('user'):
+		if profile.user_id in already_seen:
+			continue
+		shared = sorted(user_classes & set(profile.classes or []))
+		if not shared:
+			continue
+		name = profile.user.get_full_name() or profile.user.email.split('@')[0]
+		results.append({
+			'name': name,
+			'initials': _initials_for_name(name),
+			'shared_classes': shared,
+			'gradient': _AVATAR_GRADIENTS[profile.user.id % len(_AVATAR_GRADIENTS)],
+		})
+		if len(results) >= limit:
+			break
+	return results
+
+
 @login_required
 def dashboard(request):
-	"""Home/Discover page shown after login or onboarding completion"""
-	return render(request, 'main/dashboard.html')
+	current_user_name = request.user.get_full_name() or request.user.email.split('@')[0]
+	try:
+		user_classes = request.user.profile.classes or []
+	except StudentProfile.DoesNotExist:
+		user_classes = []
+
+	upcoming_sessions = (
+		StudySession.objects
+		.filter(course_code__in=user_classes, scheduled_at__gte=timezone.now())
+		.prefetch_related('attendees')[:3]
+	) if user_classes else []
+
+	return render(request, 'main/dashboard.html', {
+		'current_user_name': current_user_name,
+		'current_user_initials': _initials_for_name(current_user_name),
+		'suggested_classmates': _suggested_classmates(request.user),
+		'upcoming_sessions': upcoming_sessions,
+		'user_classes': user_classes,
+	})
+
+
+@login_required
+@require_POST
+def create_study_session(request):
+	try:
+		data = json.loads(request.body)
+		title = data.get('title', '').strip()
+		course_code = data.get('course_code', '').strip().upper()
+		location = data.get('location', '').strip()
+		scheduled_at = data.get('scheduled_at', '').strip()
+
+		if not title or not course_code or not scheduled_at:
+			return JsonResponse({'success': False, 'message': 'Title, course, and date/time are required'}, status=400)
+
+		from django.utils.dateparse import parse_datetime
+		dt = parse_datetime(scheduled_at)
+		if not dt:
+			return JsonResponse({'success': False, 'message': 'Invalid date/time format'}, status=400)
+
+		session = StudySession.objects.create(
+			title=title,
+			course_code=course_code,
+			location=location,
+			scheduled_at=dt,
+			host=request.user,
+		)
+		session.attendees.add(request.user)
+		return JsonResponse({'success': True, 'message': 'Study session created!', 'id': session.id})
+	except Exception as e:
+		return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+@login_required
+@require_POST
+def toggle_study_session(request, session_id):
+	session = get_object_or_404(StudySession, pk=session_id)
+	if request.user in session.attendees.all():
+		session.attendees.remove(request.user)
+		joined = False
+	else:
+		session.attendees.add(request.user)
+		joined = True
+	return JsonResponse({'success': True, 'joined': joined, 'count': session.attendees.count()})
 
 @login_required
 def campus_events(request):
-	return render(request, 'main/campus_events.html')
+	current_user_name = request.user.get_full_name() or request.user.email.split('@')[0]
+	return render(request, 'main/campus_events.html', {
+		'current_user_name': current_user_name,
+		'current_user_initials': _initials_for_name(current_user_name),
+	})
 
 
 @login_required
@@ -152,43 +247,62 @@ def add_class(request):
 		return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
 
+_AVATAR_GRADIENTS = [
+	'linear-gradient(135deg,#667eea,#764ba2)',
+	'linear-gradient(135deg,#f093fb,#f5576c)',
+	'linear-gradient(135deg,#4facfe,#00f2fe)',
+	'linear-gradient(135deg,#43e97b,#38f9d7)',
+	'linear-gradient(135deg,#fa709a,#fee140)',
+	'linear-gradient(135deg,#a18cd1,#fbc2eb)',
+	'linear-gradient(135deg,#fd7043,#ff8a65)',
+	'linear-gradient(135deg,#26c6da,#00acc1)',
+]
+
+
 @login_required
 def classmates_page(request):
-	courses = Course.objects.all()
-	selected_code = request.GET.get('course', '').strip().upper()
-	selected_course = courses.filter(code=selected_code).first() if selected_code else courses.first()
+	try:
+		current_profile = request.user.profile
+		user_classes = current_profile.classes or []
+	except StudentProfile.DoesNotExist:
+		user_classes = []
 
-	classmates = Classmate.objects.filter(course=selected_course) if selected_course else Classmate.objects.none()
+	selected_code = request.GET.get('course', '').strip().upper()
+	if not selected_code and user_classes:
+		selected_code = user_classes[0]
+
 	search_query = request.GET.get('q', '').strip()
-	status_filter = request.GET.get('status', 'all').strip().lower()
 	sort_by = request.GET.get('sort', 'recommended').strip().lower()
 
-	if search_query:
-		classmates = classmates.filter(
-			Q(full_name__icontains=search_query) |
-			Q(degree_name__icontains=search_query) |
-			Q(course__code__icontains=search_query)
-		)
+	# Find real users who share the selected class
+	peers = []
+	if selected_code:
+		other_profiles = StudentProfile.objects.exclude(user=request.user).select_related('user')
+		for p in other_profiles:
+			if selected_code in (p.classes or []):
+				name = p.user.get_full_name() or p.user.email.split('@')[0]
+				if search_query and search_query.lower() not in name.lower() and search_query.lower() not in p.degree.lower():
+					continue
+				shared = sorted(set(user_classes) & set(p.classes or []))
+				peers.append({
+					'name': name,
+					'initials': _initials_for_name(name),
+					'degree': p.degree or 'UQ Student',
+					'year_display': p.get_year_display(),
+					'gradient': _AVATAR_GRADIENTS[p.user.id % len(_AVATAR_GRADIENTS)],
+					'shared_classes': shared,
+					'selected_class': selected_code,
+				})
 
-	if status_filter in {Classmate.ActionState.CONNECT, Classmate.ActionState.GOING}:
-		classmates = classmates.filter(action_state=status_filter)
-
-	if sort_by == 'recent':
-		classmates = classmates.order_by('-created_at', 'display_order', 'full_name')
-	elif sort_by == 'name':
-		classmates = classmates.order_by('full_name')
-	elif sort_by == 'online':
-		classmates = classmates.order_by('-is_online', 'display_order', 'full_name')
-	else:
-		classmates = classmates.order_by('display_order', 'full_name')
+	if sort_by == 'name':
+		peers.sort(key=lambda p: p['name'])
 
 	current_user_name = request.user.get_full_name() or request.user.email.split('@')[0]
 	context = {
-		'courses': courses,
-		'selected_course': selected_course,
-		'classmates': classmates,
+		'user_classes': user_classes,
+		'selected_code': selected_code,
+		'peers': peers,
 		'search_query': search_query,
-		'status_filter': status_filter,
 		'sort_by': sort_by,
 		'today_label': _format_date_label(timezone.localdate()),
 		'current_user_name': current_user_name,
@@ -197,18 +311,129 @@ def classmates_page(request):
 	return render(request, 'main/classmates.html', context)
 
 
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_discover_match(request):
+	"""Get the next discover match for the current user"""
+	try:
+		# Get current user's profile
+		try:
+			current_profile = request.user.profile
+		except StudentProfile.DoesNotExist:
+			return JsonResponse({'success': False, 'message': 'Complete your profile first'}, status=400)
+
+		# Get users the current user has already seen (liked, passed, or superlked)
+		already_seen = DiscoverAction.objects.filter(user=request.user).values_list('target_user_id', flat=True)
+
+		# Get all profiles excluding current user and already seen
+		all_profiles = StudentProfile.objects.exclude(
+			user_id__in=already_seen
+		).exclude(
+			user=request.user
+		)
+
+		# Find users who share at least one class with current user (Python-based for SQLite compatibility)
+		matching_profile = None
+		current_classes = set(current_profile.classes)
+		
+		for profile in all_profiles:
+			profile_classes = set(profile.classes)
+			if current_classes & profile_classes:  # Check for overlap
+				matching_profile = profile
+				break
+		
+		# If no one shares classes, just show someone else
+		if not matching_profile:
+			matching_profile = all_profiles.first()
+
+		if not matching_profile:
+			return JsonResponse({
+				'success': True,
+				'message': 'No more matches',
+				'data': None
+			})
+
+		match_user = matching_profile.user
+
+		# Find shared connection (first shared class)
+		shared_classes = current_classes & set(matching_profile.classes)
+		shared_connection = shared_classes.pop() if shared_classes else None
+
+		data = {
+			'id': match_user.id,
+			'name': match_user.get_full_name(),
+			'age': 21,  # Could be calculated from DOB if available
+			'degree': matching_profile.degree,
+			'year': matching_profile.get_year_display(),
+			'interests': matching_profile.interests,
+			'bio': matching_profile.bio,
+			'shared_connection': shared_connection,
+		}
+
+		return JsonResponse({
+			'success': True,
+			'data': data
+		})
+
+	except Exception as e:
+		return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
 @login_required
 @require_POST
-def toggle_classmate_status(request, classmate_id):
-	classmate = get_object_or_404(Classmate, pk=classmate_id)
-	classmate.action_state = (
-		Classmate.ActionState.GOING
-		if classmate.action_state == Classmate.ActionState.CONNECT
-		else Classmate.ActionState.CONNECT
-	)
-	classmate.save(update_fields=['action_state'])
+def submit_discover_action(request):
+	"""Record a user's action (like, pass, or superlike) on discover"""
+	try:
+		data = json.loads(request.body)
+		target_user_id = data.get('target_user_id')
+		action_type = data.get('action_type')  # 'like', 'pass', 'superlike'
 
-	next_url = request.POST.get('next') or reverse('classmates')
-	if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
-		next_url = reverse('classmates')
-	return redirect(next_url)
+		# Validate action type
+		if action_type not in dict(DiscoverAction.ActionType.choices):
+			return JsonResponse({'success': False, 'message': 'Invalid action type'}, status=400)
+
+		# Get target user
+		target_user = get_object_or_404(PeerlyUser, id=target_user_id)
+
+		# Prevent users from interacting with themselves
+		if target_user == request.user:
+			return JsonResponse({'success': False, 'message': 'Cannot interact with yourself'}, status=400)
+
+		# Create or update the action
+		action, created = DiscoverAction.objects.update_or_create(
+			user=request.user,
+			target_user=target_user,
+			defaults={'action_type': action_type}
+		)
+
+		return JsonResponse({
+			'success': True,
+			'message': f'Action recorded: {action_type}',
+			'action_id': action.id
+		})
+
+	except json.JSONDecodeError:
+		return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
+	except Exception as e:
+		return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+@login_required
+def get_discover_stats(request):
+	"""Get stats about discover interactions"""
+	likes_count = DiscoverAction.objects.filter(user=request.user, action_type='like').count()
+	passes_count = DiscoverAction.objects.filter(user=request.user, action_type='pass').count()
+	superlikes_count = DiscoverAction.objects.filter(user=request.user, action_type='superlike').count()
+	received_likes = DiscoverAction.objects.filter(target_user=request.user, action_type='like').count()
+
+	return JsonResponse({
+		'success': True,
+		'stats': {
+			'likes_sent': likes_count,
+			'passes_sent': passes_count,
+			'superlikes_sent': superlikes_count,
+			'likes_received': received_likes,
+		}
+	})

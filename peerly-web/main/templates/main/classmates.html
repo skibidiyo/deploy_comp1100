@@ -65,8 +65,7 @@
   <div class="main-wrap">
     <header class="topbar">
       <form class="search-bar" method="get" action="{% url 'classmates' %}">
-        {% if selected_course %}<input type="hidden" name="course" value="{{ selected_course.code }}" />{% endif %}
-        <input type="hidden" name="status" value="{{ status_filter }}" />
+        {% if selected_code %}<input type="hidden" name="course" value="{{ selected_code }}" />{% endif %}
         <input type="hidden" name="sort" value="{{ sort_by }}" />
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" name="q" value="{{ search_query }}" placeholder="Search classmates..." />
@@ -96,12 +95,12 @@
       <div class="page-header-wrap">
         <div>
           <p class="eyebrow">{{ today_label }}</p>
-          {% if selected_course %}
-            <h1>{{ selected_course.code }}</h1>
-            <p>{{ selected_course.title }} — {{ selected_course.enrolled_classmates }} Enrolled Classmates</p>
+          {% if selected_code %}
+            <h1>{{ selected_code }}</h1>
+            <p>{{ peers|length }} classmate{{ peers|length|pluralize }} enrolled in this course</p>
           {% else %}
             <h1>Classmates</h1>
-            <p>Browse students in your shared courses.</p>
+            <p>Add a class to see who's enrolled with you.</p>
           {% endif %}
         </div>
 
@@ -112,9 +111,7 @@
               Filter
             </summary>
             <div class="menu-sheet">
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}sort={{ sort_by }}" class="menu-option {% if status_filter == 'all' %}active{% endif %}">All classmates</a>
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}status=connect&amp;sort={{ sort_by }}" class="menu-option {% if status_filter == 'connect' %}active{% endif %}">Ready to connect</a>
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}status=going&amp;sort={{ sort_by }}" class="menu-option {% if status_filter == 'going' %}active{% endif %}">Already going</a>
+              <a href="{% url 'classmates' %}?{% if selected_code %}course={{ selected_code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}sort={{ sort_by }}" class="menu-option active">All classmates</a>
             </div>
           </details>
 
@@ -124,74 +121,151 @@
               {% if sort_by == 'recent' %}Recent{% elif sort_by == 'name' %}Name{% elif sort_by == 'online' %}Online{% else %}Recommended{% endif %}
             </summary>
             <div class="menu-sheet">
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=recommended" class="menu-option {% if sort_by == 'recommended' %}active{% endif %}">Recommended</a>
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=recent" class="menu-option {% if sort_by == 'recent' %}active{% endif %}">Recent</a>
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=name" class="menu-option {% if sort_by == 'name' %}active{% endif %}">Name</a>
-              <a href="{% url 'classmates' %}?{% if selected_course %}course={{ selected_course.code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}{% if status_filter != 'all' %}status={{ status_filter }}&amp;{% endif %}sort=online" class="menu-option {% if sort_by == 'online' %}active{% endif %}">Online</a>
+              <a href="{% url 'classmates' %}?{% if selected_code %}course={{ selected_code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}sort=recommended" class="menu-option {% if sort_by == 'recommended' %}active{% endif %}">Recommended</a>
+              <a href="{% url 'classmates' %}?{% if selected_code %}course={{ selected_code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}sort=recent" class="menu-option {% if sort_by == 'recent' %}active{% endif %}">Recent</a>
+              <a href="{% url 'classmates' %}?{% if selected_code %}course={{ selected_code }}&amp;{% endif %}{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}sort=name" class="menu-option {% if sort_by == 'name' %}active{% endif %}">Name</a>
             </div>
           </details>
         </div>
       </div>
 
-      {% if courses %}
+      {% if user_classes %}
       <div class="course-tabs">
-        {% for course in courses %}
-          <a href="{% url 'classmates' %}?course={{ course.code }}" class="course-tab {% if selected_course and selected_course.pk == course.pk %}active{% endif %}">{{ course.code }}</a>
+        {% for code in user_classes %}
+          <a href="{% url 'classmates' %}?course={{ code }}" class="course-tab {% if selected_code == code %}active{% endif %}">{{ code }}</a>
         {% endfor %}
       </div>
       {% endif %}
 
-      {% if classmates %}
+      {% if peers %}
         <section class="classmates-grid">
-          {% for classmate in classmates %}
+          {% for peer in peers %}
             <article class="classmate-card">
               <div class="card-top">
                 <div class="profile-wrap">
-                  <div class="profile-avatar" data-gradient="{{ classmate.avatar_gradient }}">
-                    <span>{{ classmate.avatar_initials }}</span>
-                    {% if classmate.is_online %}<span class="status-dot"></span>{% endif %}
+                  <div class="profile-avatar" data-gradient="{{ peer.gradient }}">
+                    <span>{{ peer.initials }}</span>
                   </div>
-                  <div class="shared-pill">Shared: {{ classmate.course.code }}</div>
+                  <div class="shared-pills">
+                    {% for cls in peer.shared_classes %}
+                      <div class="shared-pill">{{ cls }}</div>
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
 
               <div class="card-body">
-                <h2>{{ classmate.full_name }}</h2>
-                <p>{{ classmate.degree_name }}</p>
+                <h2>{{ peer.name }}</h2>
+                <p>{{ peer.degree }}{% if peer.year_display %} · {{ peer.year_display }}{% endif %}</p>
               </div>
 
               <div class="card-actions">
-                <form method="post" action="{% url 'toggle-classmate-status' classmate.id %}" class="toggle-form">
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-                  <button type="submit" class="primary-btn {% if classmate.action_state == 'going' %}success{% endif %}">
-                    {% if classmate.action_state == 'going' %}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-                    {% endif %}
-                    {{ classmate.get_action_state_display }}
-                  </button>
-                </form>
-                <button type="button" class="message-btn" aria-label="Message {{ classmate.full_name }}">
+                <button type="button" class="primary-btn">Connect</button>
+                <button type="button" class="message-btn" aria-label="Message {{ peer.name }}">
                   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 </button>
               </div>
             </article>
           {% endfor %}
         </section>
+      {% elif not user_classes %}
+        <section class="empty-state">
+          <h2>No classes added yet</h2>
+          <p>Add your UQ classes to see classmates enrolled in the same courses.</p>
+        </section>
       {% else %}
         <section class="empty-state">
-          <h2>No classmates match this filter</h2>
-          <p>Try a different search term, reset the filter, or switch to another course tab.</p>
-          <a class="reset-link" href="{% url 'classmates' %}{% if selected_course %}?course={{ selected_course.code }}{% endif %}">Reset classmates list</a>
+          <h2>No classmates found in {{ selected_code }}</h2>
+          <p>You're the first one here — check back as more students join.</p>
+          <a class="reset-link" href="{% url 'classmates' %}?course={{ selected_code }}">Reset search</a>
         </section>
       {% endif %}
     </main>
   </div>
 
+  <!-- Add a Class Modal -->
+  <div id="addClassModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add a Class</h2>
+        <button id="closeModal" class="close-btn">×</button>
+      </div>
+      <form id="addClassForm">
+        {% csrf_token %}
+        <div class="modal-form-group">
+          <label for="classInput">Class Code</label>
+          <input type="text" id="classInput" name="class_code" placeholder="e.g., COMS2001" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+          <button type="submit" id="submitBtn" class="btn-submit" disabled>Add Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="successNotification" class="success-notification" style="display:none;"></div>
+
   <script>
     document.querySelectorAll('.profile-avatar[data-gradient]').forEach((avatar) => {
       avatar.style.background = avatar.dataset.gradient;
     });
+
+    const modal = document.getElementById('addClassModal');
+    const addClassBtn = document.querySelector('.add-class-btn');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const addClassForm = document.getElementById('addClassForm');
+    const classInput = document.getElementById('classInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const successNotification = document.getElementById('successNotification');
+
+    addClassBtn.addEventListener('click', () => { modal.style.display = 'flex'; classInput.focus(); });
+
+    const closeModal = () => { modal.style.display = 'none'; classInput.value = ''; submitBtn.disabled = true; };
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    classInput.addEventListener('input', () => { submitBtn.disabled = !classInput.value.trim(); });
+
+    addClassForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const classCode = classInput.value.trim().toUpperCase();
+      const formData = new FormData();
+      formData.append('class_code', classCode);
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      try {
+        const response = await fetch('{% url "add-class" %}', { method: 'POST', body: formData, headers: { 'X-CSRFToken': csrfToken } });
+        const data = await response.json();
+        if (data.success) {
+          const classes = JSON.parse(localStorage.getItem('peerly_classes') || '[]');
+          if (!classes.includes(classCode)) { classes.push(classCode); localStorage.setItem('peerly_classes', JSON.stringify(classes)); }
+          closeModal();
+          globalThis.location.href = '{% url "classmates" %}?course=' + classCode;
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (error) {
+        alert('Error adding class: ' + error.message);
+      }
+    });
   </script>
+
+  <style>
+    .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000; }
+    .modal-content { background:#fff;border-radius:12px;padding:24px;width:90%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.15); }
+    .modal-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:20px; }
+    .modal-header h2 { margin:0;font-size:20px;font-weight:600; }
+    .close-btn { background:none;border:none;font-size:28px;cursor:pointer;color:#666; }
+    .modal-form-group { margin-bottom:20px; }
+    .modal-form-group label { display:block;margin-bottom:8px;font-weight:500;color:#333; }
+    .modal-form-group input { width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;box-sizing:border-box; }
+    .modal-form-group input:focus { outline:none;border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,.1); }
+    .modal-actions { display:flex;gap:12px;justify-content:flex-end; }
+    .btn-cancel,.btn-submit { padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:500;font-size:14px; }
+    .btn-cancel { background:#f0f0f0;color:#333; }
+    .btn-submit { background:#7C3AED;color:#fff; }
+    .btn-submit:disabled { background:#ccc;color:#444;cursor:not-allowed; }
+    .success-notification { position:fixed;bottom:20px;right:20px;background:#10b981;color:#fff;padding:12px 20px;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:1001; }
+  </style>
 </body>
 </html>

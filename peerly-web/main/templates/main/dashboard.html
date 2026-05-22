@@ -69,22 +69,24 @@
 
     <!-- Top bar -->
     <header class="topbar">
-      <div class="search-bar">
+      <form class="search-bar" method="get" action="{% url 'classmates' %}">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" placeholder="Search for students, clubs, or courses..." />
-      </div>
+        <input type="text" name="q" placeholder="Search for students, clubs, or courses..." />
+      </form>
       <div class="topbar-nav">
-        <span class="topbar-link">Discover</span>
+        <span class="topbar-link active">Discover</span>
         <span class="topbar-link">Communities</span>
       </div>
       <div class="topbar-actions">
-        <button class="icon-btn">
+        <button class="icon-btn notification" type="button" aria-label="Notifications">
+          <span class="dot"></span>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
         </button>
-        <button class="icon-btn">
+        <button class="icon-btn" type="button" aria-label="Messages">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </button>
-        <div class="avatar">
+        <div class="avatar" aria-label="{{ current_user_name }}">
+          <span>{{ current_user_initials }}</span>
           <div class="avatar-online"></div>
         </div>
       </div>
@@ -105,42 +107,42 @@
         <div class="discover-section">
           <h2>Discover Matches</h2>
           
-          <div class="discover-card">
+          <div class="discover-card" id="discoverCard">
             <div class="card-img-placeholder"></div>
             <div class="card-content">
               <div class="card-header">
                 <div>
-                  <h3>Alex Chen, 21</h3>
-                  <p class="degree">Bachelor of Computer Science</p>
+                  <h3 id="matchName">Loading...</h3>
+                  <p class="degree" id="matchDegree"></p>
                 </div>
                 <div class="card-tags">
-                  <span class="tag">Computer Science</span>
-                  <span class="tag">3rd Year</span>
+                  <span class="tag" id="matchStudy"></span>
+                  <span class="tag" id="matchYear"></span>
                 </div>
               </div>
               <div class="interests">
                 <span class="interest-label">INTERESTS</span>
-                <div class="interest-badges">
-                  <span class="badge">💻 Coding</span>
-                  <span class="badge">🥾 Hiking</span>
-                  <span class="badge">🎵 Live Music</span>
+                <div class="interest-badges" id="matchInterests">
                 </div>
               </div>
-              <div class="shared-connection">
+              <div class="shared-connection" id="sharedConnectionDiv" style="display: none;">
                 <div class="connection-icon">✨</div>
                 <div>
                   <div class="connection-title">Shared Connection</div>
-                  <div class="connection-code">COMS3200</div>
+                  <div class="connection-code" id="sharedConnection"></div>
                   <div class="connection-text">together</div>
                 </div>
               </div>
-              <p class="bio">"Currently struggling with distributed systems but loving the challenge. Looking for someone to grab coffee with and maybe tackle some LeetCode or go on a weekend hike!"</p>
+              <p class="bio" id="matchBio"></p>
               <div class="card-actions">
-                <button class="action-btn pass">✕</button>
-                <button class="action-btn like">✓</button>
-                <button class="action-btn superlike">★</button>
+                <button class="action-btn pass" id="passBtn" onclick="submitAction('pass')">✕</button>
+                <button class="action-btn like" id="likeBtn" onclick="submitAction('like')">✓</button>
+                <button class="action-btn superlike" id="superlikeBtn" onclick="submitAction('superlike')">★</button>
               </div>
             </div>
+          </div>
+          <div id="noMatchesMessage" style="display: none; text-align: center; padding: 40px;">
+            <p style="font-size: 18px; color: #999;">No more matches! Check back later.</p>
           </div>
         </div>
 
@@ -150,56 +152,51 @@
           <!-- People You Might Know -->
           <div class="sidebar-section">
             <h2>People You Might Know</h2>
+            {% for person in suggested_classmates %}
             <div class="person-item">
-              <div class="person-avatar small-placeholder"></div>
+              <div class="person-avatar suggestion-avatar" data-gradient="{{ person.gradient }}">{{ person.initials }}</div>
               <div class="person-info">
-                <div class="person-name">Sarah Miller</div>
-                <div class="person-detail">4 Mutual Connections</div>
+                <div class="person-name">{{ person.name }}</div>
+                <div class="person-detail">{{ person.shared_classes|join:", " }}</div>
               </div>
               <button class="add-btn">+</button>
             </div>
-            <div class="person-item">
-              <div class="person-avatar small-placeholder"></div>
-              <div class="person-info">
-                <div class="person-name">David Kim</div>
-                <div class="person-detail">Studies MATH1051</div>
-              </div>
-              <button class="add-btn">+</button>
-            </div>
-            <a href="#" class="view-more">View More Suggestions</a>
+            {% empty %}
+            <p style="font-size:13px;color:#999;margin:8px 0;">Add classes to see classmates here.</p>
+            {% endfor %}
+            <a href="{% url 'classmates' %}" class="view-more">View All Classmates</a>
           </div>
 
           <!-- Study Sessions -->
           <div class="sidebar-section">
             <div class="section-header">
               <h2>Study Sessions</h2>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <button class="icon-btn" id="createSessionBtn" title="Create session" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
             </div>
-            <div class="study-session">
+            {% for session in upcoming_sessions %}
+            <div class="study-session" data-session-id="{{ session.id }}">
               <div class="session-time">
-                <div class="time-label">TOMORROW</div>
-                <div class="time">2:00 PM</div>
+                <div class="time-label">{{ session.scheduled_at|date:"D d M" }}</div>
+                <div class="time">{{ session.scheduled_at|date:"g:i A" }}</div>
               </div>
               <div class="session-info">
-                <div class="session-title">CSSE2010 Exam Prep</div>
-                <div class="session-location">Library Level 4, Room 402</div>
-                <div class="session-avatars">
-                  <div class="mini-avatar"></div>
-                  <div class="mini-avatar"></div>
-                  <div class="mini-avatar"></div>
+                <div class="session-title">{{ session.title }}</div>
+                <div class="session-course-badge">{{ session.course_code }}</div>
+                {% if session.location %}<div class="session-location">{{ session.location }}</div>{% endif %}
+                <div class="session-footer">
+                  <span class="session-attendees">{{ session.attendees.count }} going</span>
+                  <button class="session-join-btn {% if request.user in session.attendees.all %}joined{% endif %}"
+                          data-id="{{ session.id }}">
+                    {% if request.user in session.attendees.all %}Joined ✓{% else %}Join{% endif %}
+                  </button>
                 </div>
               </div>
             </div>
-            <div class="study-session">
-              <div class="session-time">
-                <div class="time-label">WEDNESDAY</div>
-                <div class="time">10:00 AM</div>
-              </div>
-              <div class="session-info">
-                <div class="session-title">Philosophy Reading Group</div>
-                <div class="session-location">The Great Court</div>
-              </div>
-            </div>
+            {% empty %}
+            <p style="font-size:13px;color:#999;margin:8px 0;">No upcoming sessions in your classes. Create one!</p>
+            {% endfor %}
           </div>
 
           <!-- Footer -->
@@ -240,7 +237,119 @@
   <!-- Success Notification -->
   <div id="successNotification" class="success-notification" style="display: none;"></div>
 
+  <!-- Create Study Session Modal -->
+  <div id="sessionModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create Study Session</h2>
+        <button id="closeSessionModal" class="close-btn">×</button>
+      </div>
+      <div class="modal-form-group">
+        <label for="sessionTitle">Title</label>
+        <input type="text" id="sessionTitle" placeholder="e.g., COMS3200 Exam Prep">
+      </div>
+      <div class="modal-form-group">
+        <label for="sessionCourse">Course</label>
+        <select id="sessionCourse">
+          <option value="">Select a course</option>
+          {% for code in user_classes %}
+          <option value="{{ code }}">{{ code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="modal-form-group">
+        <label for="sessionLocation">Location</label>
+        <input type="text" id="sessionLocation" placeholder="e.g., Library Level 4, Room 402">
+      </div>
+      <div class="modal-form-group">
+        <label for="sessionDatetime">Date & Time</label>
+        <input type="datetime-local" id="sessionDatetime">
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="cancelSessionBtn" class="btn-cancel">Cancel</button>
+        <button type="button" id="submitSessionBtn" class="btn-submit">Create</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let currentMatch = null;
+
+    // Load initial match
+    function loadMatch() {
+      fetch('{% url "discover-match" %}')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.data) {
+            currentMatch = data.data;
+            displayMatch(data.data);
+          } else {
+            showNoMatches();
+          }
+        })
+        .catch(error => console.error('Error loading match:', error));
+    }
+
+    // Display match data
+    function displayMatch(match) {
+      document.getElementById('discoverCard').style.display = 'block';
+      document.getElementById('noMatchesMessage').style.display = 'none';
+      
+      document.getElementById('matchName').textContent = `${match.name}, ${match.age}`;
+      document.getElementById('matchDegree').textContent = match.degree;
+      document.getElementById('matchStudy').textContent = 'Computer Science'; // Could use degree if categorized
+      document.getElementById('matchYear').textContent = match.year;
+      document.getElementById('matchBio').textContent = `"${match.bio}"`;
+      
+      // Display interests
+      const interestsBadges = match.interests.map(interest => `<span class="badge">${interest}</span>`).join('');
+      document.getElementById('matchInterests').innerHTML = interestsBadges;
+      
+      // Display shared connection
+      if (match.shared_connection) {
+        document.getElementById('sharedConnectionDiv').style.display = 'flex';
+        document.getElementById('sharedConnection').textContent = match.shared_connection;
+      } else {
+        document.getElementById('sharedConnectionDiv').style.display = 'none';
+      }
+    }
+
+    function showNoMatches() {
+      document.getElementById('discoverCard').style.display = 'none';
+      document.getElementById('noMatchesMessage').style.display = 'block';
+    }
+
+    function submitAction(actionType) {
+      if (!currentMatch) return;
+
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      
+      fetch('{% url "discover-action" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
+          target_user_id: currentMatch.id,
+          action_type: actionType
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Load next match
+            loadMatch();
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch(error => console.error('Error submitting action:', error));
+    }
+
+    // Load first match on page load
+    loadMatch();
+
     // Modal functionality
     const modal = document.getElementById('addClassModal');
     const addClassBtn = document.querySelector('.add-class-btn');
@@ -324,6 +433,80 @@
       } catch (error) {
         alert('Error adding class: ' + error.message);
       }
+    });
+
+    // Study session modal
+    const sessionModal = document.getElementById('sessionModal');
+    const createSessionBtn = document.getElementById('createSessionBtn');
+    const closeSessionModal = document.getElementById('closeSessionModal');
+    const cancelSessionBtn = document.getElementById('cancelSessionBtn');
+    const submitSessionBtn = document.getElementById('submitSessionBtn');
+
+    const openSessionModal = () => { sessionModal.style.display = 'flex'; };
+    const closeSession = () => { sessionModal.style.display = 'none'; };
+
+    if (createSessionBtn) createSessionBtn.addEventListener('click', openSessionModal);
+    closeSessionModal.addEventListener('click', closeSession);
+    cancelSessionBtn.addEventListener('click', closeSession);
+    sessionModal.addEventListener('click', e => { if (e.target === sessionModal) closeSession(); });
+
+    submitSessionBtn.addEventListener('click', async () => {
+      const title = document.getElementById('sessionTitle').value.trim();
+      const course_code = document.getElementById('sessionCourse').value;
+      const location = document.getElementById('sessionLocation').value.trim();
+      const scheduled_at = document.getElementById('sessionDatetime').value;
+      if (!title || !course_code || !scheduled_at) {
+        alert('Please fill in title, course, and date/time.');
+        return;
+      }
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      try {
+        const res = await fetch('{% url "create-study-session" %}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+          body: JSON.stringify({ title, course_code, location, scheduled_at }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeSession();
+          successNotification.textContent = '✓ ' + data.message;
+          successNotification.style.display = 'block';
+          setTimeout(() => { successNotification.style.display = 'none'; }, 3000);
+          globalThis.location.reload();
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    });
+
+    // Join / leave study session
+    document.querySelectorAll('.session-join-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        try {
+          const res = await fetch(`/study-sessions/${id}/toggle/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+          });
+          const data = await res.json();
+          if (data.success) {
+            btn.classList.toggle('joined', data.joined);
+            btn.textContent = data.joined ? 'Joined ✓' : 'Join';
+            const countEl = btn.closest('.session-info').querySelector('.session-attendees');
+            if (countEl) countEl.textContent = data.count + ' going';
+          }
+        } catch (e) {
+          alert('Error: ' + e.message);
+        }
+      });
+    });
+
+    // Apply gradients to suggestion avatars
+    document.querySelectorAll('.suggestion-avatar[data-gradient]').forEach(el => {
+      el.style.background = el.dataset.gradient;
     });
 
     // Navigation active state
