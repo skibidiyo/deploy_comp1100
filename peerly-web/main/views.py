@@ -90,7 +90,7 @@ def complete_onboarding(request):
 		try:
 			parsed = json.loads(classes_str)
 			classes = [str(c).strip() for c in parsed if str(c).strip()] if isinstance(parsed, list) else []
-		except (json.JSONDecodeError, ValueError):
+		except ValueError:
 			classes = [c.strip() for c in classes_str.split(',') if c.strip()] if classes_str else []
 		
 		# Create or update StudentProfile
@@ -126,6 +126,7 @@ def _suggested_classmates(user, limit=5):
 			continue
 		name = profile.user.get_full_name() or profile.user.email.split('@')[0]
 		results.append({
+			'user_id': profile.user.id,
 			'name': name,
 			'initials': _initials_for_name(name),
 			'shared_classes': shared,
@@ -143,6 +144,22 @@ def dashboard(request):
 		user_classes = request.user.profile.classes or []
 	except StudentProfile.DoesNotExist:
 		user_classes = []
+
+	search_query = request.GET.get('q', '').strip()
+	search_results = []
+	if search_query:
+		q = search_query.lower()
+		for profile in StudentProfile.objects.exclude(user=request.user).select_related('user'):
+			name = profile.user.get_full_name() or profile.user.email.split('@')[0]
+			if q in name.lower() or q in profile.degree.lower():
+				search_results.append({
+					'user_id': profile.user.id,
+					'name': name,
+					'initials': _initials_for_name(name),
+					'degree': profile.degree or 'UQ Student',
+					'year_display': profile.get_year_display(),
+					'gradient': _AVATAR_GRADIENTS[profile.user.id % len(_AVATAR_GRADIENTS)],
+				})
 
 	upcoming_sessions = (
 		StudySession.objects
@@ -163,6 +180,8 @@ def dashboard(request):
 		'user_classes': user_classes,
 		'communities': communities,
 		'user_community_ids': user_community_ids,
+		'search_query': search_query,
+		'search_results': search_results,
 	})
 
 
@@ -266,6 +285,38 @@ _AVATAR_GRADIENTS = [
 ]
 
 
+def _peer_dict(p, user_classes, selected_code):
+	name = p.user.get_full_name() or p.user.email.split('@')[0]
+	return {
+		'user_id': p.user.id,
+		'name': name,
+		'initials': _initials_for_name(name),
+		'degree': p.degree or 'UQ Student',
+		'year_display': p.get_year_display(),
+		'gradient': _AVATAR_GRADIENTS[p.user.id % len(_AVATAR_GRADIENTS)],
+		'shared_classes': sorted(set(user_classes) & set(p.classes or [])),
+		'selected_class': selected_code,
+	}
+
+
+def _matches_query(p, q):
+	name = p.user.get_full_name() or p.user.email.split('@')[0]
+	return q in name.lower() or q in p.degree.lower()
+
+
+def _get_peers(other_profiles, user_classes, search_query, selected_code, global_search=False):
+	if not global_search and not selected_code:
+		return []
+	q = search_query.lower() if search_query else ''
+	peers = []
+	for p in other_profiles:
+		in_class = not selected_code or selected_code in (p.classes or [])
+		matches = not q or _matches_query(p, q)
+		if (global_search or in_class) and matches:
+			peers.append(_peer_dict(p, user_classes, selected_code))
+	return peers
+
+
 @login_required
 def classmates_page(request):
 	try:
@@ -281,34 +332,23 @@ def classmates_page(request):
 	search_query = request.GET.get('q', '').strip()
 	sort_by = request.GET.get('sort', 'recommended').strip().lower()
 
-	# Find real users who share the selected class
-	peers = []
-	if selected_code:
-		other_profiles = StudentProfile.objects.exclude(user=request.user).select_related('user')
-		for p in other_profiles:
-			if selected_code in (p.classes or []):
-				name = p.user.get_full_name() or p.user.email.split('@')[0]
-				if search_query and search_query.lower() not in name.lower() and search_query.lower() not in p.degree.lower():
-					continue
-				shared = sorted(set(user_classes) & set(p.classes or []))
-				peers.append({
-					'name': name,
-					'initials': _initials_for_name(name),
-					'degree': p.degree or 'UQ Student',
-					'year_display': p.get_year_display(),
-					'gradient': _AVATAR_GRADIENTS[p.user.id % len(_AVATAR_GRADIENTS)],
-					'shared_classes': shared,
-					'selected_class': selected_code,
-				})
+	global_search = request.GET.get('scope') == 'global'
+	other_profiles = StudentProfile.objects.exclude(user=request.user).select_related('user')
+	peers = _get_peers(other_profiles, user_classes, search_query, selected_code, global_search)
 
 	if sort_by == 'name':
 		peers.sort(key=lambda p: p['name'])
 
+	liked_ids = set(
+		DiscoverAction.objects.filter(user=request.user, action_type='like')
+		.values_list('target_user_id', flat=True)
+	)
 	current_user_name = request.user.get_full_name() or request.user.email.split('@')[0]
 	context = {
 		'user_classes': user_classes,
 		'selected_code': selected_code,
 		'peers': peers,
+		'liked_ids': liked_ids,
 		'search_query': search_query,
 		'sort_by': sort_by,
 		'today_label': _format_date_label(timezone.localdate()),
@@ -409,7 +449,7 @@ def submit_discover_action(request):
 			return JsonResponse({'success': False, 'message': 'Cannot interact with yourself'}, status=400)
 
 		# Create or update the action
-		action, created = DiscoverAction.objects.update_or_create(
+		action, _ = DiscoverAction.objects.update_or_create(
 			user=request.user,
 			target_user=target_user,
 			defaults={'action_type': action_type}

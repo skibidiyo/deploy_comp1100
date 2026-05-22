@@ -155,7 +155,11 @@
               </div>
 
               <div class="card-actions">
-                <button type="button" class="primary-btn">Connect</button>
+                <button type="button"
+                        class="primary-btn connect-btn {% if peer.user_id in liked_ids %}connected{% endif %}"
+                        data-user-id="{{ peer.user_id }}">
+                  {% if peer.user_id in liked_ids %}Connected ✓{% else %}Connect{% endif %}
+                </button>
                 <button type="button" class="message-btn" aria-label="Message {{ peer.name }}">
                   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 </button>
@@ -203,6 +207,28 @@
   <script>
     document.querySelectorAll('.profile-avatar[data-gradient]').forEach((avatar) => {
       avatar.style.background = avatar.dataset.gradient;
+    });
+
+    document.querySelectorAll('.connect-btn[data-user-id]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (btn.classList.contains('connected')) return;
+        const userId = btn.dataset.userId;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        try {
+          const res = await fetch('{% url "discover-action" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ target_user_id: Number.parseInt(userId), action_type: 'like' }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            btn.classList.add('connected');
+            btn.textContent = 'Connected ✓';
+          }
+        } catch (e) {
+          alert('Error: ' + e.message);
+        }
+      });
     });
 
     const modal = document.getElementById('addClassModal');
@@ -261,6 +287,7 @@
     .btn-submit { background:#7C3AED;color:#fff; }
     .btn-submit:disabled { background:#ccc;color:#444;cursor:not-allowed; }
     .success-notification { position:fixed;bottom:20px;right:20px;background:#10b981;color:#fff;padding:12px 20px;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:1001; }
+    .connect-btn.connected { background:#e9d5ff;color:#4c1d95;cursor:default; }
   </style>
 </body>
 </html>

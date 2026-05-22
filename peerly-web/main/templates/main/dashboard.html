@@ -69,9 +69,9 @@
 
     <!-- Top bar -->
     <header class="topbar">
-      <form class="search-bar" method="get" action="{% url 'classmates' %}">
+      <form class="search-bar" method="get" action="{% url 'home' %}">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" name="q" placeholder="Search for students, clubs, or courses..." />
+        <input type="text" name="q" value="{{ search_query }}" placeholder="Search for students..." />
       </form>
       <div class="topbar-nav">
         <button class="topbar-link active" id="tab-discover" type="button" onclick="switchTab('discover')">Discover</button>
@@ -94,6 +94,31 @@
 
     <!-- Page content -->
     <div class="page-content">
+
+      {% if search_query %}
+      <div class="search-results-panel">
+        <div class="search-results-header">
+          <h2>Results for "{{ search_query }}"</h2>
+          <a href="{% url 'home' %}" class="search-clear">✕ Clear</a>
+        </div>
+        {% if search_results %}
+        <div class="search-results-grid">
+          {% for person in search_results %}
+          <div class="search-result-card">
+            <div class="search-result-avatar" data-gradient="{{ person.gradient }}">{{ person.initials }}</div>
+            <div class="search-result-info">
+              <div class="search-result-name">{{ person.name }}</div>
+              <div class="search-result-meta">{{ person.degree }}{% if person.year_display %} · {{ person.year_display }}{% endif %}</div>
+            </div>
+            <button class="search-connect-btn" data-user-id="{{ person.user_id }}">Connect</button>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="search-empty">No students found matching "{{ search_query }}".</p>
+        {% endif %}
+      </div>
+      {% else %}
 
       <div class="page-header" id="page-header-discover">
         <h1>Discover Feed</h1>
@@ -171,7 +196,7 @@
                 <div class="person-name">{{ person.name }}</div>
                 <div class="person-detail">{{ person.shared_classes|join:", " }}</div>
               </div>
-              <button class="add-btn">+</button>
+              <button class="add-btn" data-user-id="{{ person.user_id }}" title="Connect">+</button>
             </div>
             {% empty %}
             <p style="font-size:13px;color:#999;margin:8px 0;">Add classes to see classmates here.</p>
@@ -247,6 +272,8 @@
           {% endfor %}
         </div>
       </div>
+
+      {% endif %}{# end search_query else #}
 
     </div>
   </div>
@@ -352,6 +379,13 @@
 
   <script>
     function switchTab(tab) {
+      const url = new URL(globalThis.location.href);
+      if (url.searchParams.has('q')) {
+        url.searchParams.delete('q');
+        url.searchParams.set('_tab', tab);
+        globalThis.location.href = url.toString();
+        return;
+      }
       const isDiscover = tab === 'discover';
       document.getElementById('panel-discover').style.display = isDiscover ? 'grid' : 'none';
       document.getElementById('panel-communities').style.display = isDiscover ? 'none' : 'block';
@@ -359,6 +393,15 @@
       document.getElementById('page-header-communities').style.display = isDiscover ? 'none' : 'block';
       document.getElementById('tab-discover').classList.toggle('active', isDiscover);
       document.getElementById('tab-communities').classList.toggle('active', !isDiscover);
+    }
+
+    // Restore tab after search clear
+    const urlParams = new URLSearchParams(globalThis.location.search);
+    if (urlParams.get('_tab') === 'communities') {
+      const cleanUrl = new URL(globalThis.location.href);
+      cleanUrl.searchParams.delete('_tab');
+      history.replaceState(null, '', cleanUrl.toString());
+      switchTab('communities');
     }
 
     // Apply gradients to community banners
@@ -699,9 +742,62 @@
       });
     });
 
+    // Apply gradients to search result avatars
+    document.querySelectorAll('.search-result-avatar[data-gradient]').forEach(el => {
+      el.style.background = el.dataset.gradient;
+    });
+
+    // Connect button in search results
+    document.querySelectorAll('.search-connect-btn[data-user-id]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (btn.classList.contains('connected')) return;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        try {
+          const res = await fetch('{% url "discover-action" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ target_user_id: Number.parseInt(btn.dataset.userId), action_type: 'like' }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            btn.classList.add('connected');
+            btn.textContent = 'Connected ✓';
+          }
+        } catch (e) { alert('Error: ' + e.message); }
+      });
+    });
+
     // Apply gradients to suggestion avatars
     document.querySelectorAll('.suggestion-avatar[data-gradient]').forEach(el => {
       el.style.background = el.dataset.gradient;
+    });
+
+    // "+" connect button in People You Might Know
+    document.querySelectorAll('.add-btn[data-user-id]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const userId = btn.dataset.userId;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        try {
+          const res = await fetch('{% url "discover-action" %}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ target_user_id: Number.parseInt(userId), action_type: 'like' }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            btn.textContent = '✓';
+            btn.style.background = '#22c55e';
+            btn.disabled = true;
+            setTimeout(() => {
+              btn.closest('.person-item').style.transition = 'opacity .3s';
+              btn.closest('.person-item').style.opacity = '0';
+              setTimeout(() => btn.closest('.person-item').remove(), 300);
+            }, 600);
+          }
+        } catch (e) {
+          alert('Error: ' + e.message);
+        }
+      });
     });
 
     // Navigation active state

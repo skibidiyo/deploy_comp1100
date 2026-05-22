@@ -682,6 +682,108 @@ body {
   transform: translateY(-1px);
 }
 
+/* ── Search Results ────────────────────────────── */
+.search-results-panel {
+  margin-top: 28px;
+}
+
+.search-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.search-results-header h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.search-clear {
+  font-size: 13px;
+  color: var(--neutral-400);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.search-clear:hover { color: var(--neutral-900); }
+
+.search-results-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search-result-card {
+  background: #fff;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+
+.search-result-card:hover { box-shadow: var(--shadow-md); }
+
+.search-result-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.search-result-info { flex: 1; min-width: 0; }
+
+.search-result-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
+.search-result-meta {
+  font-size: 12px;
+  color: var(--neutral-400);
+  margin-top: 2px;
+}
+
+.search-connect-btn {
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  transition: background var(--transition), color var(--transition);
+}
+
+.search-connect-btn:hover { background: var(--primary); color: #fff; }
+
+.search-connect-btn.connected {
+  background: var(--primary-light);
+  color: #4c1d95;
+  border-color: var(--primary-light);
+  cursor: default;
+}
+
+.search-empty {
+  font-size: 14px;
+  color: var(--neutral-400);
+  margin-top: 12px;
+}
+
 /* ── Communities Grid ──────────────────────────── */
 .communities-grid {
   display: grid;
