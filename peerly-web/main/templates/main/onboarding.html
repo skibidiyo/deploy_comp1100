@@ -84,6 +84,10 @@
         
         // Load from localStorage on page load
         window.addEventListener('load', function() {
+            // Clear any stale data from a previous account's session
+            ['peerly_fullName','peerly_username','peerly_degree','peerly_year',
+             'peerly_interests','peerly_classes','peerly_bio'].forEach(k => localStorage.removeItem(k));
+
             const savedName = localStorage.getItem('peerly_fullName');
             const savedUsername = localStorage.getItem('peerly_username');
             

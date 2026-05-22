@@ -4,12 +4,16 @@ from accounts.models import PeerlyUser
 
 class StudentProfile(models.Model):
 	YEAR_CHOICES = [
-		('1', '1st Year'),
-		('2', '2nd Year'),
-		('3', '3rd Year'),
-		('4', '4th Year'),
-		('5', '5th Year'),
-		('postgrad', 'Postgraduate'),
+		('1', 'Year 1'),
+		('2', 'Year 2'),
+		('3', 'Year 3'),
+		('4', 'Year 4'),
+		('5', 'Year 5 (Dentistry / Vet)'),
+		('honours', 'Honours Year'),
+		('pgc', 'Postgraduate Coursework'),
+		('phd', 'PhD / MPhil'),
+		('international', 'International Student'),
+		('double-degree', 'Double Degree'),
 	]
 
 	user = models.OneToOneField(PeerlyUser, on_delete=models.CASCADE, related_name='profile')

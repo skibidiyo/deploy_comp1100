@@ -105,10 +105,11 @@
             }
         });
 
-        // Before form submission, ensure localStorage bio is captured
+        // Before form submission, capture bio then clear all onboarding localStorage
         bioForm.addEventListener('submit', function(e) {
-            // Save bio to localStorage before submitting
             localStorage.setItem('peerly_bio', bioInput.value);
+            ['peerly_fullName','peerly_username','peerly_degree','peerly_year',
+             'peerly_interests','peerly_classes','peerly_bio'].forEach(k => localStorage.removeItem(k));
         });
     </script>
 </body>
