@@ -22,6 +22,7 @@ class StudentProfile(models.Model):
 	bio = models.TextField(max_length=500, blank=True)
 	interests = models.JSONField(default=list)
 	classes = models.JSONField(default=list)
+	birthday = models.DateField(null=True, blank=True)
 	profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)

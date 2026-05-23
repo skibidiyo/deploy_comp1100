@@ -533,7 +533,7 @@
       document.getElementById('discoverCard').style.display = 'block';
       document.getElementById('noMatchesMessage').style.display = 'none';
       
-      document.getElementById('matchName').textContent = `${match.name}, ${match.age}`;
+      document.getElementById('matchName').textContent = match.age ? `${match.name}, ${match.age}` : match.name;
       document.getElementById('matchDegree').textContent = match.degree;
       document.getElementById('matchStudy').textContent = 'Computer Science'; // Could use degree if categorized
       document.getElementById('matchYear').textContent = match.year;

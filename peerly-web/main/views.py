@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -83,6 +84,7 @@ def complete_onboarding(request):
 		bio = request.POST.get('bio', '')
 		interests_str = request.POST.get('interests', '')
 		classes_str = request.POST.get('classes', '')
+		birthday_str = request.POST.get('birthday', '')
 		
 		# Parse interests from comma-separated string
 		interests = [i.strip() for i in interests_str.split(',') if i.strip()] if interests_str else []
@@ -99,11 +101,20 @@ def complete_onboarding(request):
 		except StudentProfile.DoesNotExist:
 			profile = StudentProfile(user=request.user)
 		
+		birthday = None
+		if birthday_str:
+			try:
+				from datetime import datetime
+				birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
+			except ValueError:
+				pass
+
 		profile.degree = degree
 		profile.year = year
 		profile.bio = bio
 		profile.interests = interests
 		profile.classes = classes
+		profile.birthday = birthday
 		profile.save()
 	
 	request.session.pop('needs_onboarding', None)
@@ -408,10 +419,17 @@ def get_discover_match(request):
 		shared_classes = current_classes & set(matching_profile.classes)
 		shared_connection = shared_classes.pop() if shared_classes else None
 
+		today = date.today()
+		bday = matching_profile.birthday
+		age = (
+			today.year - bday.year - ((today.month, today.day) < (bday.month, bday.day))
+			if bday else None
+		)
+
 		data = {
 			'id': match_user.id,
-			'name': match_user.get_full_name(),
-			'age': 21,  # Could be calculated from DOB if available
+			'name': match_user.get_full_name() or match_user.email.split('@')[0],
+			'age': age,
 			'degree': matching_profile.degree,
 			'year': matching_profile.get_year_display(),
 			'interests': matching_profile.interests,

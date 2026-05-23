@@ -57,6 +57,7 @@
                         <input type="hidden" name="year" id="hidden-year" value="">
                         <input type="hidden" name="interests" id="hidden-interests" value="">
                         <input type="hidden" name="classes" id="hidden-classes" value="">
+                        <input type="hidden" name="birthday" id="hidden-birthday" value="">
                     </form>
 
                     <div class="info-box">
@@ -91,12 +92,14 @@
             const interests = localStorage.getItem('peerly_interests') || '';
             const classes = localStorage.getItem('peerly_classes') || '';
             const bio = localStorage.getItem('peerly_bio') || '';
-            
+            const birthday = localStorage.getItem('peerly_birthday') || '';
+
             // Set hidden field values
             document.getElementById('hidden-degree').value = degree;
             document.getElementById('hidden-year').value = year;
             document.getElementById('hidden-interests').value = interests;
             document.getElementById('hidden-classes').value = classes;
+            document.getElementById('hidden-birthday').value = birthday;
             
             // Set visible bio field
             if (bio) {
@@ -108,7 +111,7 @@
         // Before form submission, capture bio then clear all onboarding localStorage
         bioForm.addEventListener('submit', function(e) {
             localStorage.setItem('peerly_bio', bioInput.value);
-            ['peerly_fullName','peerly_username','peerly_degree','peerly_year',
+            ['peerly_fullName','peerly_username','peerly_birthday','peerly_degree','peerly_year',
              'peerly_interests','peerly_classes','peerly_bio'].forEach(k => localStorage.removeItem(k));
         });
     </script>

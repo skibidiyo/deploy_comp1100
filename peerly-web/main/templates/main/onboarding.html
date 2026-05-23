@@ -53,6 +53,12 @@
                             <input type="text" id="username" placeholder="@alex_uq2024" required>
                             <small>Your unique handle for mentions and search.</small>
                         </div>
+
+                        <div class="form-group">
+                            <label for="birthday">Date of Birth</label>
+                            <input type="date" id="birthday" required max="">
+                            <small>Used to display your age on your profile.</small>
+                        </div>
                     </form>
                 </div>
 
@@ -80,25 +86,33 @@
     <script>
         const fullNameInput = document.getElementById('full-name');
         const usernameInput = document.getElementById('username');
+        const birthdayInput = document.getElementById('birthday');
         const continueBtn = document.getElementById('continueBtn');
-        
+
+        // Restrict birthday to today or earlier
+        birthdayInput.max = new Date().toISOString().split('T')[0];
+
         // Load from localStorage on page load
         window.addEventListener('load', function() {
             // Clear any stale data from a previous account's session
-            ['peerly_fullName','peerly_username','peerly_degree','peerly_year',
+            ['peerly_fullName','peerly_username','peerly_birthday','peerly_degree','peerly_year',
              'peerly_interests','peerly_classes','peerly_bio'].forEach(k => localStorage.removeItem(k));
 
             const savedName = localStorage.getItem('peerly_fullName');
             const savedUsername = localStorage.getItem('peerly_username');
-            
+            const savedBirthday = localStorage.getItem('peerly_birthday');
+
             if (savedName) fullNameInput.value = savedName;
             if (savedUsername) usernameInput.value = savedUsername;
-            
+            if (savedBirthday) birthdayInput.value = savedBirthday;
+
             validateForm();
         });
-        
+
         function validateForm() {
-            const isFilled = fullNameInput.value.trim() !== '' && usernameInput.value.trim() !== '';
+            const isFilled = fullNameInput.value.trim() !== ''
+                && usernameInput.value.trim() !== ''
+                && birthdayInput.value !== '';
             if (isFilled) {
                 continueBtn.removeAttribute('disabled');
                 continueBtn.style.opacity = '1';
@@ -109,20 +123,22 @@
                 continueBtn.style.cursor = 'not-allowed';
             }
         }
-        
+
         fullNameInput.addEventListener('input', validateForm);
         usernameInput.addEventListener('input', validateForm);
+        birthdayInput.addEventListener('change', validateForm);
 
         continueBtn.addEventListener('click', function(e) {
-            if (!fullNameInput.value.trim() || !usernameInput.value.trim()) {
+            if (!fullNameInput.value.trim() || !usernameInput.value.trim() || !birthdayInput.value) {
                 e.preventDefault();
                 alert('Please fill in all required fields');
                 return;
             }
-            
+
             // Save to localStorage before navigating
             localStorage.setItem('peerly_fullName', fullNameInput.value.trim());
             localStorage.setItem('peerly_username', usernameInput.value.trim());
+            localStorage.setItem('peerly_birthday', birthdayInput.value);
         });
     </script>
 </body>
