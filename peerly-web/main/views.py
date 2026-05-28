@@ -249,6 +249,15 @@ def campus_events(request):
 
 
 @login_required
+def groups_page(request):
+	current_user_name = request.user.get_full_name() or request.user.email.split('@')[0]
+	return render(request, 'main/groups.html', {
+		'current_user_name': current_user_name,
+		'current_user_initials': _initials_for_name(current_user_name),
+	})
+
+
+@login_required
 @require_http_methods(["POST"])
 def add_class(request):
 	"""Add a class code to the user's StudentProfile"""

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    campus_events, classmates_page, complete_onboarding, dashboard, landing_page,
+    campus_events, classmates_page, complete_onboarding, dashboard, groups_page, landing_page,
     onboarding_step1, onboarding_step2, onboarding_step3, onboarding_step4, onboarding_step5,
     add_class, get_discover_match, submit_discover_action, get_discover_stats,
     create_study_session, toggle_study_session,
@@ -12,6 +12,7 @@ urlpatterns = [
     path('', landing_page, name='landing-page'),
     path('home/', dashboard, name='home'),
     path('events/', campus_events, name='campus-events'),
+    path('groups/', groups_page, name='groups'),
     path('classmates/', classmates_page, name='classmates'),
     path('add-class/', add_class, name='add-class'),
     path('discover/match/', get_discover_match, name='discover-match'),
