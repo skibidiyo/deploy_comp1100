@@ -1,0 +1,619 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peerly – Chat & Groups</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="groups.css" />
+</head>
+
+<body>
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-name">Peerly</div>
+      <div class="logo-sub">UQ Student Hub</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="{% url 'home' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21H3V9.75z"/>
+        </svg>
+        Home
+      </a>
+
+      <a class="nav-item active" href="{% url 'groups' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        Chat
+      </a>
+
+      <a class="nav-item" href="{% url 'groups' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 100-8 4 4 0 000 8z"/>
+        </svg>
+        Groups
+      </a>
+
+      <a class="nav-item" href="{% url 'campus-events' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Events
+      </a>
+
+      <a class="nav-item" href="{% url 'classmates' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 14a4 4 0 100-8 4 4 0 000 8zm-7 7a7 7 0 0114 0"/>
+        </svg>
+        Classmates
+      </a>
+
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.88 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        Profile
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="add-class-btn">
+        <span>＋</span>
+        Add a Class
+      </button>
+
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Settings
+      </a>
+
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Help
+      </a>
+    </div>
+  </aside>
+
+
+  <!-- MESSAGES PANEL -->
+  <section class="messages-panel">
+    <div class="messages-header">
+      <h2>Messages</h2>
+    </div>
+
+    <div class="messages-tabs">
+      <button class="tab-btn active" data-tab="interested">Interested</button>
+      <button class="tab-btn" data-tab="groups">Groups</button>
+    </div>
+
+    <form class="messages-search">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Search chats..." />
+    </form>
+
+    <div class="messages-list" id="chat-list"></div>
+  </section>
+
+
+  <!-- CHAT PANEL -->
+  <section class="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <h3 id="chat-title">Sarah Jenkins</h3>
+        <p id="chat-subtitle">Online now</p>
+      </div>
+
+      <div class="chat-header-actions">
+        <div class="avatar-stack" id="avatar-stack">
+          <span class="stack-avatar sarah"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <div class="chat-input-area">
+      <form class="chat-input-form" id="chat-form">
+        <button type="button" class="input-action">＋</button>
+
+        <input id="chat-input" type="text" placeholder="Message..." autocomplete="off" />
+
+        <button type="button" class="emoji-btn">☺</button>
+
+        <button type="submit" class="send-btn" aria-label="Send message">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 20.5L21 12L3 3.5V10L15 12L3 14V20.5Z"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="group-info-panel" id="group-info-panel">
+    <div class="group-info-header">
+      <div class="big-group-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v14H4z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4 3-4 3"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14 15h3"/>
+        </svg>
+        <span class="floating-dot"></span>
+      </div>
+
+      <h3 id="info-title">CSSE1001 Group</h3>
+      <p id="info-description">
+        Introduction to<br>
+        Software Engineering<br>
+        Study Hub
+      </p>
+    </div>
+
+    <div class="info-section">
+      <h4>ABOUT</h4>
+
+      <div class="info-card">
+        <div class="info-row">
+          <span class="label">◇</span>
+          <span class="value" id="info-course">CSSE1001 /<br>7030</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">□</span>
+          <span class="value">Created Aug<br>2023</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="section-header">
+        <h4>ONLINE — 8</h4>
+        <a href="#" class="view-all-link">View All</a>
+      </div>
+
+      <div class="members-list">
+        <div class="member-item">
+          <div class="member-avatar sarah"></div>
+          <div>
+            <div class="member-name">Sarah Jenkins</div>
+            <div class="member-status">Studying recursion...</div>
+          </div>
+        </div>
+
+        <div class="member-item">
+          <div class="member-avatar alex"></div>
+          <div>
+            <div class="member-name">Alex Rivera</div>
+            <div class="member-status">At Hawken Bldg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h4>STUDY SESSIONS</h4>
+
+      <div class="study-session-card">
+        <div class="session-badge">NEXT SESSION</div>
+        <div class="session-title">Final Exam Prep</div>
+        <div class="session-time">Tomorrow, 2:00 PM</div>
+        <button class="rsvp-btn">RSVP Now</button>
+      </div>
+    </div>
+  </aside>
+
+
+  <script>
+    const chats = {
+      sarah: {
+        type: "person",
+        tab: "interested",
+        name: "Sarah Jenkins",
+        subtitle: "Online now",
+        avatar: "sarah",
+        preview: "Can you help with recursion later?",
+        infoHidden: true,
+        messages: [
+          {
+            sender: "Sarah Jenkins",
+            avatar: "sarah",
+            text: "Hey! Are you going to the CSSE1001 study session tomorrow?",
+            mine: false
+          },
+          {
+            text: "Yeah, I’m keen. I still need help with recursion though.",
+            mine: true
+          },
+          {
+            sender: "Sarah Jenkins",
+            avatar: "sarah",
+            text: "Same here. I found a guide that makes the stack calls way easier to understand.",
+            mine: false
+          }
+        ]
+      },
+
+      alex: {
+        type: "person",
+        tab: "interested",
+        name: "Alex Rivera",
+        subtitle: "At Hawken Bldg",
+        avatar: "alex",
+        preview: "I’m at Hawken if you want to meet.",
+        infoHidden: true,
+        messages: [
+          {
+            sender: "Alex Rivera",
+            avatar: "alex",
+            text: "I’m at Hawken right now if you want to go through the assignment.",
+            mine: false
+          },
+          {
+            text: "Perfect, I’ll come by after I grab coffee.",
+            mine: true
+          }
+        ]
+      },
+
+      maya: {
+        type: "person",
+        tab: "interested",
+        name: "Maya Chen",
+        subtitle: "Online now",
+        avatar: "maya",
+        preview: "Did you finish the prac questions?",
+        infoHidden: true,
+        messages: [
+          {
+            sender: "Maya Chen",
+            avatar: "maya",
+            text: "Did you finish the prac questions for this week?",
+            mine: false
+          },
+          {
+            text: "Not yet. I got stuck on the final tree traversal one.",
+            mine: true
+          }
+        ]
+      },
+
+      taylor: {
+        type: "person",
+        tab: "interested",
+        name: "Taylor Brooks",
+        subtitle: "Last active 10m ago",
+        avatar: "taylor",
+        preview: "Want to revise before the exam?",
+        infoHidden: true,
+        messages: [
+          {
+            sender: "Taylor Brooks",
+            avatar: "taylor",
+            text: "Want to revise before the exam this week?",
+            mine: false
+          },
+          {
+            text: "Yeah, that would be good. Maybe tomorrow afternoon?",
+            mine: true
+          }
+        ]
+      },
+
+      csse1001: {
+        type: "group",
+        tab: "groups",
+        name: "CSSE1001 Study Group",
+        subtitle: "24 members • 8 online",
+        avatar: "group-purple",
+        preview: "Alex: Let's meet at the library...",
+        infoHidden: false,
+        messages: [
+          {
+            sender: "Sarah Jenkins",
+            avatar: "sarah",
+            text: "Has anyone started on the Python recursion assignment? I'm stuck on the base case logic for the tree traversal task. 🌲",
+            mine: false
+          },
+          {
+            sender: "Alex Rivera",
+            avatar: "alex",
+            text: "Yeah, I'm at the Hawken Building study area right now. I can show you how I structured my 'if' statements. It's a bit tricky!",
+            mine: false
+          },
+          {
+            text: "I'll be there in 10 mins! Just grabbing a coffee from Merlo. Should we book a study room?",
+            mine: true
+          },
+          {
+            sender: "Sarah Jenkins",
+            avatar: "sarah",
+            text: "Great idea. I found this resource which helped me visualize the stacks:",
+            mine: false,
+            file: {
+              name: "Recursion_Guide_V2.pdf",
+              size: "1.2 MB • PDF Document"
+            }
+          }
+        ]
+      },
+
+      psych: {
+        type: "group",
+        tab: "groups",
+        name: "Psych Soc Event",
+        subtitle: "18 members • 4 online",
+        avatar: "group-orange",
+        preview: "Taylor: Who's coming tonight?",
+        infoHidden: false,
+        infoTitle: "Psych Soc Event",
+        infoDescription: "Psychology Society<br>Event Planning<br>Group",
+        infoCourse: "PSYC Society /<br>Social Event",
+        messages: [
+          {
+            sender: "Taylor Brooks",
+            avatar: "taylor",
+            text: "Who’s coming tonight?",
+            mine: false
+          },
+          {
+            text: "I might come along. What time does it start?",
+            mine: true
+          }
+        ]
+      },
+
+      design: {
+        type: "group",
+        tab: "groups",
+        name: "Design Funday",
+        subtitle: "12 members • 3 online",
+        avatar: "group-soft",
+        preview: "Sarah uploaded 3 files",
+        infoHidden: false,
+        infoTitle: "Design Funday",
+        infoDescription: "Creative Design<br>Workshop<br>Group",
+        infoCourse: "DECO /<br>Design Hub",
+        messages: [
+          {
+            sender: "Sarah Jenkins",
+            avatar: "sarah",
+            text: "I uploaded 3 files for the workshop moodboard.",
+            mine: false
+          },
+          {
+            text: "Legend, I’ll check them out tonight.",
+            mine: true
+          }
+        ]
+      }
+    };
+
+    const storageKey = "peerly_chat_messages_v1";
+    let currentTab = "interested";
+    let activeChat = "sarah";
+
+    const savedMessages = JSON.parse(localStorage.getItem(storageKey) || "{}");
+
+    Object.keys(savedMessages).forEach(chatId => {
+      if (chats[chatId]) {
+        chats[chatId].messages = savedMessages[chatId];
+      }
+    });
+
+    const chatList = document.getElementById("chat-list");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatTitle = document.getElementById("chat-title");
+    const chatSubtitle = document.getElementById("chat-subtitle");
+    const chatInput = document.getElementById("chat-input");
+    const chatForm = document.getElementById("chat-form");
+    const groupInfoPanel = document.getElementById("group-info-panel");
+    const avatarStack = document.getElementById("avatar-stack");
+
+    function saveMessages() {
+      const messagesOnly = {};
+
+      Object.keys(chats).forEach(chatId => {
+        messagesOnly[chatId] = chats[chatId].messages;
+      });
+
+      localStorage.setItem(storageKey, JSON.stringify(messagesOnly));
+    }
+
+    function renderChatList() {
+      chatList.innerHTML = "";
+
+      Object.entries(chats)
+        .filter(([id, chat]) => chat.tab === currentTab)
+        .forEach(([id, chat]) => {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = `message-item ${id === activeChat ? "active" : ""}`;
+          item.dataset.chat = id;
+
+          const avatarClass = chat.type === "person"
+            ? `message-avatar person ${chat.avatar}`
+            : `message-avatar group ${chat.avatar}`;
+
+          item.innerHTML = `
+            <div class="${avatarClass}">
+              ${chat.type === "group" ? `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v14H4z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4 3-4 3"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 15h3"/>
+                </svg>
+              ` : ""}
+            </div>
+
+            <div class="message-info">
+              <div class="message-name">${chat.name}</div>
+              <div class="message-preview">${chat.preview}</div>
+            </div>
+          `;
+
+          item.addEventListener("click", () => {
+            activeChat = id;
+            renderChatList();
+            renderActiveChat();
+          });
+
+          chatList.appendChild(item);
+        });
+    }
+
+    function renderActiveChat() {
+      const chat = chats[activeChat];
+
+      chatTitle.textContent = chat.name;
+      chatSubtitle.textContent = chat.subtitle;
+      chatInput.placeholder = `Message ${chat.type === "group" ? "#" : ""}${chat.name}...`;
+
+      renderAvatarStack(chat);
+      renderInfoPanel(chat);
+      renderMessages(chat);
+    }
+
+    function renderAvatarStack(chat) {
+      if (chat.type === "group") {
+        avatarStack.innerHTML = `
+          <span class="stack-avatar sarah"></span>
+          <span class="stack-avatar alex"></span>
+          <span class="stack-avatar third"></span>
+          <span class="stack-more">+21</span>
+        `;
+      } else {
+        avatarStack.innerHTML = `<span class="stack-avatar ${chat.avatar}"></span>`;
+      }
+    }
+
+    function renderInfoPanel(chat) {
+      if (chat.infoHidden) {
+        groupInfoPanel.classList.add("is-hidden");
+        return;
+      }
+
+      groupInfoPanel.classList.remove("is-hidden");
+
+      document.getElementById("info-title").textContent = chat.infoTitle || "CSSE1001 Group";
+      document.getElementById("info-description").innerHTML = chat.infoDescription || "Introduction to<br>Software Engineering<br>Study Hub";
+      document.getElementById("info-course").innerHTML = chat.infoCourse || "CSSE1001 /<br>7030";
+    }
+
+    function renderMessages(chat) {
+      chatMessages.innerHTML = `<div class="chat-date-marker">MONDAY, OCT 23</div>`;
+
+      chat.messages.forEach(message => {
+        const row = document.createElement("div");
+        row.className = message.mine ? "message-row user-message" : "message-row";
+
+        if (message.mine) {
+          row.innerHTML = `
+            <div class="message-bubble user">
+              <div class="message-text">${escapeHtml(message.text)}</div>
+            </div>
+          `;
+        } else {
+          row.innerHTML = `
+            <div class="message-avatar-small ${message.avatar || "sarah"}"></div>
+
+            <div class="message-content-stack">
+              <div class="message-bubble">
+                <div class="message-sender">${message.sender || ""}</div>
+                <div class="message-text">${escapeHtml(message.text)}</div>
+              </div>
+
+              ${message.file ? `
+                <a class="file-attachment" href="#">
+                  <div class="pdf-icon"><span>PDF</span></div>
+
+                  <div class="file-details">
+                    <div class="file-name">${message.file.name}</div>
+                    <div class="file-size">${message.file.size}</div>
+                  </div>
+
+                  <div class="download-icon">⌄</div>
+                </a>
+              ` : ""}
+            </div>
+          `;
+        }
+
+        chatMessages.appendChild(row);
+      });
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    chatForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const text = chatInput.value.trim();
+
+      if (!text) return;
+
+      chats[activeChat].messages.push({
+        text,
+        mine: true
+      });
+
+      chatInput.value = "";
+      saveMessages();
+      renderActiveChat();
+    });
+
+    document.querySelectorAll(".tab-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        currentTab = button.dataset.tab;
+
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+          btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const firstChatInTab = Object.keys(chats).find(id => chats[id].tab === currentTab);
+
+        if (firstChatInTab) {
+          activeChat = firstChatInTab;
+        }
+
+        renderChatList();
+        renderActiveChat();
+      });
+    });
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    renderChatList();
+    renderActiveChat();
+  </script>
+
+</body>
+</html>
