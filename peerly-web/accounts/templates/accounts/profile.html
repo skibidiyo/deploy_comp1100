@@ -1,0 +1,211 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ user.full_name }} | Peerly Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{% static 'accounts/profile.css' %}">
+</head>
+<body class="profile-page">
+  <div class="profile-shell d-flex">
+    <aside class="sidebar d-none d-lg-flex flex-column justify-content-between p-4">
+      <div>
+        <div class="mb-5">
+          <div class="brand-logo">Peerly</div>
+          <div class="brand-tag">UQ Student Hub</div>
+        </div>
+        <nav class="nav flex-column side-nav">
+          <a class="nav-link" href="#"><i class="bi bi-house-fill"></i> Home</a>
+          <a class="nav-link" href="#"><i class="bi bi-chat-left-text-fill"></i> Chat</a>
+          <a class="nav-link" href="#"><i class="bi bi-people-fill"></i> Groups</a>
+          <a class="nav-link" href="#"><i class="bi bi-calendar-event-fill"></i> Events</a>
+          <a class="nav-link" href="#"><i class="bi bi-journal-bookmark-fill"></i> Classmates</a>
+          <a class="nav-link active" href="{% url 'profile' %}"><i class="bi bi-person-fill"></i> Profile</a>
+        </nav>
+      </div>
+      <div>
+        <a class="btn btn-primary btn-add-class w-100 mb-3" href="#">Add a Class</a>
+        <div class="aside-links">
+          <a href="#">Settings</a>
+          <a href="#">Help</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content flex-fill px-4 py-4">
+      <div class="topbar d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-4">
+        <form class="search-form flex-fill me-md-3">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" placeholder="Search Peerly..." aria-label="Search Peerly">
+          </div>
+        </form>
+        <div class="top-actions d-flex flex-wrap gap-2 align-items-center">
+          <a href="#" class="btn btn-link text-decoration-none">Discover</a>
+          <a href="#" class="btn btn-link text-decoration-none">Communities</a>
+          <button class="btn btn-outline-secondary"><i class="bi bi-bell"></i></button>
+          <button class="btn btn-outline-secondary"><i class="bi bi-envelope"></i></button>
+          <div class="profile-avatar d-flex align-items-center justify-content-center">JD</div>
+        </div>
+      </div>
+
+      <section class="profile-header card p-4 mb-4">
+        <div class="row align-items-center g-3">
+          <div class="col-auto">
+            <div class="avatar-circle d-flex align-items-center justify-content-center">{{ user.full_name|slice:":1" }}</div>
+          </div>
+          <div class="col-lg">
+            <div class="d-flex flex-column gap-2">
+              <div>
+                <div class="profile-badge">Verified UQ Student</div>
+                <h1 class="profile-name mb-1">{{ user.full_name }}</h1>
+                <p class="profile-degree mb-0">{{ profile.major }}</p>
+              </div>
+              <div class="d-flex flex-wrap gap-3 text-muted profile-meta">
+                <span><i class="bi bi-geo-alt-fill me-1"></i> {{ profile.campus }}</span>
+                <span><i class="bi bi-calendar-event-fill me-1"></i> Joined {{ profile.joined_at|date:"M Y" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-auto text-md-end">
+            <a class="btn btn-primary btn-lg me-2" href="#">Edit Profile</a>
+            <button class="btn btn-outline-secondary btn-lg">Share</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="row g-4">
+        <div class="col-xl-8">
+          <div class="card profile-card p-4">
+            <ul class="nav nav-tabs mb-4 profile-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" type="button">About</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" type="button">Social</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" type="button">Study Groups</button>
+              </li>
+            </ul>
+            <div class="profile-content">
+              <h2>About Me</h2>
+              <p>{{ profile.about }}</p>
+              <div class="row g-3 mb-4">
+                <div class="col-sm-6">
+                  <div class="info-box">
+                    <span class="info-label">Interests</span>
+                    <div class="tag-list">
+                      {% for interest in profile.interests %}
+                        <span class="badge rounded-pill bg-light text-dark">#{{ interest }}</span>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="info-box">
+                    <span class="info-label">Current Focus</span>
+                    <p class="mb-0">Decentralized learning tools and student communities.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <div class="info-box">
+                    <span class="info-label">Campus</span>
+                    <p class="mb-0">{{ profile.campus }}</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="info-box">
+                    <span class="info-label">Joined</span>
+                    <p class="mb-0">{{ profile.joined_at|date:"j F, Y" }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <div class="card stats-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h6 mb-0">Connections</h3>
+              <span class="text-muted">{# placeholder #}</span>
+            </div>
+            <div class="d-flex gap-3 flex-wrap stats-list">
+              <div class="stat-box p-3 shadow-sm rounded-3 w-100">
+                <div class="stat-value">{{ profile.connections }}</div>
+                <div class="stat-label">Connections</div>
+              </div>
+              <div class="stat-box p-3 shadow-sm rounded-3 w-100">
+                <div class="stat-value">{{ profile.active_groups }}</div>
+                <div class="stat-label">Active Groups</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card achievements-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h6 mb-0">Achievements</h3>
+              <a href="#" class="small text-decoration-none">View All</a>
+            </div>
+            <div class="row g-3">
+              {% for achievement in profile.achievements %}
+                <div class="col-6">
+                  <div class="achievement-tile p-3 rounded-4 text-center">
+                    <div class="achievement-title">{{ achievement.title }}</div>
+                    <div class="text-muted small">{{ achievement.subtitle }}</div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="card recommended-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h6 mb-0">Recommended Buddies</h3>
+              <a href="#" class="small text-decoration-none">See All</a>
+            </div>
+            <div class="list-group list-group-flush">
+              {% for buddy in profile.recommended_buddies %}
+                <div class="list-group-item d-flex align-items-center justify-content-between px-0 py-3">
+                  <div>
+                    <div class="fw-semibold">{{ buddy.name }}</div>
+                    <div class="text-muted small">{{ buddy.detail }}</div>
+                  </div>
+                  <button class="btn btn-sm btn-outline-primary">Connect</button>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="card timetable-card p-4 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h6 mb-0">Timetable Summary</h3>
+              <button class="btn btn-sm btn-outline-secondary">Expand</button>
+            </div>
+            <div class="list-group list-group-flush">
+              {% for item in profile.timetable_summary %}
+                <div class="list-group-item px-0 py-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-purple text-white">{{ item.day }}</span>
+                    <span class="small text-muted">{{ item.time }}</span>
+                  </div>
+                  <div class="fw-semibold">{{ item.event }}</div>
+                  <div class="text-muted small">{{ item.location }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

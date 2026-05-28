@@ -1,0 +1,268 @@
+body.profile-page {
+  background: #f5f2ff;
+  color: #1e1e3f;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.profile-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  border-right: 1px solid rgba(145, 140, 255, 0.18);
+}
+
+.brand-logo {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #4b3dff;
+}
+
+.brand-tag {
+  color: #7a73ff;
+  letter-spacing: 0.02em;
+}
+
+.side-nav .nav-link {
+  color: #5d5a7c;
+  font-weight: 500;
+  padding: 0.85rem 0;
+}
+
+.side-nav .nav-link:hover,
+.side-nav .nav-link.active {
+  color: #4b3dff;
+}
+
+.btn-add-class {
+  background: linear-gradient(135deg, #4b3dff, #8670ff);
+  border: none;
+  padding: 0.95rem 1rem;
+  font-weight: 600;
+}
+
+.aside-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: #6c63ff;
+}
+
+.aside-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.content {
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+
+.topbar .search-form .form-control {
+  border-radius: 999px;
+  border: 1px solid rgba(111, 102, 255, 0.25);
+  min-height: 50px;
+}
+
+.topbar .search-form .input-group-text {
+  border-radius: 999px 0 0 999px;
+  border: 1px solid rgba(111, 102, 255, 0.25);
+  border-right: 0;
+  background: white;
+}
+
+.top-actions .btn-link {
+  color: #5a52cc;
+  font-weight: 600;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #d6d1ff;
+  color: #4b3dff;
+  font-weight: 700;
+}
+
+.profile-header {
+  background: white;
+  border: none;
+  border-radius: 28px;
+  box-shadow: 0 30px 80px rgba(70, 58, 255, 0.08);
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  min-width: 120px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #6d57ff 0%, #3428ad 100%);
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(75, 61, 255, 0.12);
+  color: #4b3dff;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.profile-name {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.profile-degree {
+  color: #6f6a9a;
+}
+
+.profile-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #6f6a9a;
+}
+
+.profile-card {
+  border-radius: 28px;
+  border: none;
+  box-shadow: 0 18px 60px rgba(52, 40, 186, 0.06);
+}
+
+.profile-tabs .nav-link {
+  border: none;
+  color: #6f6a9a;
+  font-weight: 600;
+}
+
+.profile-tabs .nav-link.active {
+  color: white;
+  background: #4b3dff;
+  border-radius: 999px;
+}
+
+.profile-content h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.info-box {
+  background: #f7f5ff;
+  border-radius: 24px;
+  padding: 1.15rem;
+}
+
+.info-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: #4b3dff;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-list .badge {
+  background: #f4f0ff;
+  color: #4b3dff;
+  font-weight: 600;
+}
+
+.stats-card,
+.achievements-card,
+.recommended-card,
+.timetable-card {
+  border-radius: 28px;
+  border: none;
+  background: white;
+  box-shadow: 0 18px 60px rgba(52, 40, 186, 0.06);
+}
+
+.stats-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.stat-box {
+  background: #f9f7ff;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2a1174;
+}
+
+.stat-label {
+  color: #807bbe;
+}
+
+.achievement-tile {
+  background: #f8f5ff;
+  border-radius: 24px;
+  min-height: 120px;
+}
+
+.achievement-title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.list-group-item {
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.recommended-card .list-group-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.timetable-card .badge {
+  background: #4b3dff;
+}
+
+.btn-outline-primary {
+  border-radius: 999px;
+}
+
+.bg-purple {
+  background: #4b3dff !important;
+}
+
+@media (max-width: 1199.98px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .content {
+    padding: 1rem;
+  }
+}
