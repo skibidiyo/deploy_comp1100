@@ -1,0 +1,597 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Profile | Peerly</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'main/dashboard.css' %}?v=3" />
+  <style>
+    .edit-card {
+      background: #fff;
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 32px;
+      max-width: 720px;
+    }
+    .edit-section-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin: 0 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--neutral-200);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral-700);
+      margin-bottom: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .form-label span.optional {
+      font-weight: 400;
+      color: var(--neutral-400);
+      margin-left: 4px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--neutral-900);
+      background: #fff;
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+    }
+    .form-input::placeholder { color: var(--neutral-400); }
+    textarea.form-input { resize: vertical; min-height: 100px; }
+    select.form-input { cursor: pointer; }
+    .form-hint {
+      font-size: 12px;
+      color: var(--neutral-400);
+      margin-top: 5px;
+    }
+    .form-error {
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: 5px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--neutral-200);
+    }
+    .avatar-preview {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7C3AED, #a78bfa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .avatar-info { flex: 1; }
+    .avatar-name {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 4px;
+    }
+    .avatar-sub { font-size: 13px; color: var(--neutral-500); }
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--neutral-200);
+    }
+    .btn-save {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-save:hover { opacity: 0.9; }
+    .btn-cancel {
+      background: transparent;
+      color: var(--neutral-700);
+      border: 1.5px solid var(--neutral-200);
+      border-radius: var(--radius-sm);
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-cancel:hover { background: var(--neutral-100); }
+    .interests-section { margin-bottom: 20px; }
+    .interests-category { margin-bottom: 16px; }
+    .interests-category-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--neutral-400);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+    }
+    .interests-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .interest-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--neutral-100);
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--neutral-700);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+    }
+    .interest-chip:hover { background: var(--neutral-200); }
+    .interest-chip.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .interest-chip.selected:hover { opacity: 0.9; }
+    .chip-icon { font-size: 15px; }
+    .interests-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--neutral-100);
+      border: 1.5px solid var(--neutral-200);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      margin-bottom: 16px;
+    }
+    .interests-search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 13px;
+      color: var(--neutral-900);
+      font-family: 'Inter', sans-serif;
+      width: 100%;
+    }
+    .interests-search input::placeholder { color: var(--neutral-400); }
+    .interests-search svg { flex-shrink: 0; color: var(--neutral-400); }
+    .alert-success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #15803d;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .alert-error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-name">Peerly</div>
+      <div class="logo-sub">UQ Student Hub</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="{% url 'home' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21H3V9.75z"/></svg>
+        Home
+      </a>
+      <a class="nav-item" href="{% url 'groups' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        Chat
+      </a>
+      <a class="nav-item" href="{% url 'groups' %}?tab=groups">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 100-8 4 4 0 000 8z"/></svg>
+        Groups
+      </a>
+      <a class="nav-item" href="{% url 'campus-events' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Events
+      </a>
+      <a class="nav-item" href="{% url 'classmates' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14a4 4 0 100-8 4 4 0 000 8zm-7 7a7 7 0 0114 0"/></svg>
+        Classmates
+      </a>
+      <a class="nav-item active" href="{% url 'profile' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.88 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Profile
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="add-class-btn" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add a Class
+      </button>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </a>
+      <a class="nav-item" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Help
+      </a>
+      <a class="nav-item" href="{% url 'logout' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="search-bar">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search for students..." />
+      </div>
+      <div style="flex:1;"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn notification" type="button" aria-label="Notifications">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <button class="icon-btn" type="button" aria-label="Messages">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </button>
+        <div class="avatar">
+          <span>{{ user.full_name|slice:":2"|upper }}</span>
+          <div class="avatar-online"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <div class="page-header" style="margin-bottom: 24px;">
+        <h1>Edit Profile</h1>
+        <p>Update your personal information and preferences</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="edit-card">
+
+        <!-- Avatar preview -->
+        <div class="avatar-section">
+          <div class="avatar-preview">{{ user.full_name|slice:":1"|upper }}</div>
+          <div class="avatar-info">
+            <div class="avatar-name">{{ user.full_name }}</div>
+            <div class="avatar-sub">{{ user.email }}</div>
+          </div>
+        </div>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <h3 class="edit-section-title">Personal Info</h3>
+
+          <div class="form-group">
+            <label class="form-label" for="id_full_name">Full Name</label>
+            <input type="text" id="id_full_name" name="full_name" class="form-input"
+              value="{{ form.full_name.value|default:'' }}"
+              placeholder="Your full name" />
+            {% if form.full_name.errors %}
+              <p class="form-error">{{ form.full_name.errors|join:", " }}</p>
+            {% endif %}
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="id_degree">Degree <span class="optional">(optional)</span></label>
+              <select id="id_degree" name="degree" class="form-input">
+                <option value="">Select your degree</option>
+                <optgroup label="Business, Economics & Law">
+                  <option value="Bachelor of Business Management" {% if form.degree.value == "Bachelor of Business Management" %}selected{% endif %}>Bachelor of Business Management</option>
+                  <option value="Bachelor of Commerce" {% if form.degree.value == "Bachelor of Commerce" %}selected{% endif %}>Bachelor of Commerce</option>
+                  <option value="Bachelor of Economics" {% if form.degree.value == "Bachelor of Economics" %}selected{% endif %}>Bachelor of Economics</option>
+                  <option value="Bachelor of Laws (LLB)" {% if form.degree.value == "Bachelor of Laws (LLB)" %}selected{% endif %}>Bachelor of Laws (LLB)</option>
+                  <option value="Bachelor of Advanced Finance and Economics" {% if form.degree.value == "Bachelor of Advanced Finance and Economics" %}selected{% endif %}>Bachelor of Advanced Finance and Economics</option>
+                  <option value="Bachelor of Tourism, Hotel and Event Management" {% if form.degree.value == "Bachelor of Tourism, Hotel and Event Management" %}selected{% endif %}>Bachelor of Tourism, Hotel and Event Management</option>
+                  <option value="Master of Business Administration (MBA)" {% if form.degree.value == "Master of Business Administration (MBA)" %}selected{% endif %}>Master of Business Administration (MBA)</option>
+                  <option value="Master of Commerce" {% if form.degree.value == "Master of Commerce" %}selected{% endif %}>Master of Commerce</option>
+                  <option value="Master of Laws" {% if form.degree.value == "Master of Laws" %}selected{% endif %}>Master of Laws</option>
+                </optgroup>
+                <optgroup label="Engineering, Architecture & IT">
+                  <option value="Bachelor of Engineering (Civil)" {% if form.degree.value == "Bachelor of Engineering (Civil)" %}selected{% endif %}>Bachelor of Engineering (Civil)</option>
+                  <option value="Bachelor of Engineering (Chemical)" {% if form.degree.value == "Bachelor of Engineering (Chemical)" %}selected{% endif %}>Bachelor of Engineering (Chemical)</option>
+                  <option value="Bachelor of Engineering (Electrical)" {% if form.degree.value == "Bachelor of Engineering (Electrical)" %}selected{% endif %}>Bachelor of Engineering (Electrical)</option>
+                  <option value="Bachelor of Engineering (Mechanical)" {% if form.degree.value == "Bachelor of Engineering (Mechanical)" %}selected{% endif %}>Bachelor of Engineering (Mechanical)</option>
+                  <option value="Bachelor of Engineering (Software)" {% if form.degree.value == "Bachelor of Engineering (Software)" %}selected{% endif %}>Bachelor of Engineering (Software)</option>
+                  <option value="Bachelor of Engineering (Mechatronic)" {% if form.degree.value == "Bachelor of Engineering (Mechatronic)" %}selected{% endif %}>Bachelor of Engineering (Mechatronic)</option>
+                  <option value="Bachelor of Engineering (Biomedical)" {% if form.degree.value == "Bachelor of Engineering (Biomedical)" %}selected{% endif %}>Bachelor of Engineering (Biomedical)</option>
+                  <option value="Bachelor of Engineering (Environmental)" {% if form.degree.value == "Bachelor of Engineering (Environmental)" %}selected{% endif %}>Bachelor of Engineering (Environmental)</option>
+                  <option value="Bachelor of Engineering (Mining)" {% if form.degree.value == "Bachelor of Engineering (Mining)" %}selected{% endif %}>Bachelor of Engineering (Mining)</option>
+                  <option value="Bachelor of Computer Science" {% if form.degree.value == "Bachelor of Computer Science" %}selected{% endif %}>Bachelor of Computer Science</option>
+                  <option value="Bachelor of Information Technology" {% if form.degree.value == "Bachelor of Information Technology" %}selected{% endif %}>Bachelor of Information Technology</option>
+                  <option value="Bachelor of Architecture" {% if form.degree.value == "Bachelor of Architecture" %}selected{% endif %}>Bachelor of Architecture</option>
+                  <option value="Bachelor of Design" {% if form.degree.value == "Bachelor of Design" %}selected{% endif %}>Bachelor of Design</option>
+                  <option value="Master of Engineering" {% if form.degree.value == "Master of Engineering" %}selected{% endif %}>Master of Engineering</option>
+                  <option value="Master of Architecture" {% if form.degree.value == "Master of Architecture" %}selected{% endif %}>Master of Architecture</option>
+                  <option value="Master of Information Technology" {% if form.degree.value == "Master of Information Technology" %}selected{% endif %}>Master of Information Technology</option>
+                </optgroup>
+                <optgroup label="Health & Behavioural Sciences">
+                  <option value="Bachelor of Biomedical Science" {% if form.degree.value == "Bachelor of Biomedical Science" %}selected{% endif %}>Bachelor of Biomedical Science</option>
+                  <option value="Bachelor of Exercise and Sport Science" {% if form.degree.value == "Bachelor of Exercise and Sport Science" %}selected{% endif %}>Bachelor of Exercise and Sport Science</option>
+                  <option value="Bachelor of Health Sciences" {% if form.degree.value == "Bachelor of Health Sciences" %}selected{% endif %}>Bachelor of Health Sciences</option>
+                  <option value="Bachelor of Nursing" {% if form.degree.value == "Bachelor of Nursing" %}selected{% endif %}>Bachelor of Nursing</option>
+                  <option value="Bachelor of Occupational Therapy" {% if form.degree.value == "Bachelor of Occupational Therapy" %}selected{% endif %}>Bachelor of Occupational Therapy</option>
+                  <option value="Bachelor of Pharmacy" {% if form.degree.value == "Bachelor of Pharmacy" %}selected{% endif %}>Bachelor of Pharmacy</option>
+                  <option value="Bachelor of Physiotherapy" {% if form.degree.value == "Bachelor of Physiotherapy" %}selected{% endif %}>Bachelor of Physiotherapy</option>
+                  <option value="Bachelor of Psychological Science" {% if form.degree.value == "Bachelor of Psychological Science" %}selected{% endif %}>Bachelor of Psychological Science</option>
+                  <option value="Bachelor of Speech Pathology" {% if form.degree.value == "Bachelor of Speech Pathology" %}selected{% endif %}>Bachelor of Speech Pathology</option>
+                  <option value="Bachelor of Social Work" {% if form.degree.value == "Bachelor of Social Work" %}selected{% endif %}>Bachelor of Social Work</option>
+                  <option value="Bachelor of Midwifery" {% if form.degree.value == "Bachelor of Midwifery" %}selected{% endif %}>Bachelor of Midwifery</option>
+                  <option value="Master of Counselling" {% if form.degree.value == "Master of Counselling" %}selected{% endif %}>Master of Counselling</option>
+                  <option value="Master of Physiotherapy Studies" {% if form.degree.value == "Master of Physiotherapy Studies" %}selected{% endif %}>Master of Physiotherapy Studies</option>
+                </optgroup>
+                <optgroup label="Humanities & Social Sciences">
+                  <option value="Bachelor of Arts" {% if form.degree.value == "Bachelor of Arts" %}selected{% endif %}>Bachelor of Arts</option>
+                  <option value="Bachelor of Communication" {% if form.degree.value == "Bachelor of Communication" %}selected{% endif %}>Bachelor of Communication</option>
+                  <option value="Bachelor of Education (Primary)" {% if form.degree.value == "Bachelor of Education (Primary)" %}selected{% endif %}>Bachelor of Education (Primary)</option>
+                  <option value="Bachelor of Education (Secondary)" {% if form.degree.value == "Bachelor of Education (Secondary)" %}selected{% endif %}>Bachelor of Education (Secondary)</option>
+                  <option value="Bachelor of Journalism" {% if form.degree.value == "Bachelor of Journalism" %}selected{% endif %}>Bachelor of Journalism</option>
+                  <option value="Bachelor of Music" {% if form.degree.value == "Bachelor of Music" %}selected{% endif %}>Bachelor of Music</option>
+                  <option value="Bachelor of Social Science" {% if form.degree.value == "Bachelor of Social Science" %}selected{% endif %}>Bachelor of Social Science</option>
+                  <option value="Bachelor of Languages and Cultures" {% if form.degree.value == "Bachelor of Languages and Cultures" %}selected{% endif %}>Bachelor of Languages and Cultures</option>
+                  <option value="Bachelor of International Studies" {% if form.degree.value == "Bachelor of International Studies" %}selected{% endif %}>Bachelor of International Studies</option>
+                  <option value="Master of Arts" {% if form.degree.value == "Master of Arts" %}selected{% endif %}>Master of Arts</option>
+                  <option value="Master of Education" {% if form.degree.value == "Master of Education" %}selected{% endif %}>Master of Education</option>
+                  <option value="Master of Social Work" {% if form.degree.value == "Master of Social Work" %}selected{% endif %}>Master of Social Work</option>
+                </optgroup>
+                <optgroup label="Medicine">
+                  <option value="Doctor of Medicine (MD)" {% if form.degree.value == "Doctor of Medicine (MD)" %}selected{% endif %}>Doctor of Medicine (MD)</option>
+                  <option value="Bachelor of Dental Science" {% if form.degree.value == "Bachelor of Dental Science" %}selected{% endif %}>Bachelor of Dental Science</option>
+                  <option value="Doctor of Dental Medicine" {% if form.degree.value == "Doctor of Dental Medicine" %}selected{% endif %}>Doctor of Dental Medicine</option>
+                </optgroup>
+                <optgroup label="Science">
+                  <option value="Bachelor of Science" {% if form.degree.value == "Bachelor of Science" %}selected{% endif %}>Bachelor of Science</option>
+                  <option value="Bachelor of Advanced Science" {% if form.degree.value == "Bachelor of Advanced Science" %}selected{% endif %}>Bachelor of Advanced Science</option>
+                  <option value="Bachelor of Mathematics" {% if form.degree.value == "Bachelor of Mathematics" %}selected{% endif %}>Bachelor of Mathematics</option>
+                  <option value="Bachelor of Environmental Management" {% if form.degree.value == "Bachelor of Environmental Management" %}selected{% endif %}>Bachelor of Environmental Management</option>
+                  <option value="Bachelor of Food Technology" {% if form.degree.value == "Bachelor of Food Technology" %}selected{% endif %}>Bachelor of Food Technology</option>
+                  <option value="Bachelor of Science (Marine Science)" {% if form.degree.value == "Bachelor of Science (Marine Science)" %}selected{% endif %}>Bachelor of Science (Marine Science)</option>
+                  <option value="Doctor of Veterinary Medicine (DVM)" {% if form.degree.value == "Doctor of Veterinary Medicine (DVM)" %}selected{% endif %}>Doctor of Veterinary Medicine (DVM)</option>
+                  <option value="Master of Science" {% if form.degree.value == "Master of Science" %}selected{% endif %}>Master of Science</option>
+                </optgroup>
+                <optgroup label="Agriculture & Food">
+                  <option value="Bachelor of Agricultural Science" {% if form.degree.value == "Bachelor of Agricultural Science" %}selected{% endif %}>Bachelor of Agricultural Science</option>
+                  <option value="Bachelor of Science (Agricultural Science)" {% if form.degree.value == "Bachelor of Science (Agricultural Science)" %}selected{% endif %}>Bachelor of Science (Agricultural Science)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="id_year">Year of Study <span class="optional">(optional)</span></label>
+              <select id="id_year" name="year" class="form-input">
+                <option value="">Select year</option>
+                {% for value, label in form.fields.year.choices %}
+                  {% if value %}
+                    <option value="{{ value }}" {% if form.year.value == value %}selected{% endif %}>{{ label }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="id_birthday">Birthday <span class="optional">(optional)</span></label>
+              <input type="date" id="id_birthday" name="birthday" class="form-input"
+                value="{{ form.birthday.value|default:'' }}" />
+            </div>
+          </div>
+
+          <h3 class="edit-section-title" style="margin-top: 28px;">About Me</h3>
+
+          <div class="form-group">
+            <label class="form-label" for="id_bio">Bio <span class="optional">(optional)</span></label>
+            <textarea id="id_bio" name="bio" class="form-input"
+              placeholder="Tell other students a bit about yourself...">{{ form.bio.value|default:'' }}</textarea>
+            <p class="form-hint">Max 500 characters.</p>
+          </div>
+
+          <div class="form-group interests-section">
+            <label class="form-label" for="interest-search">Interests <span class="optional">(optional)</span></label>
+            <input type="hidden" id="id_interests" name="interests" value="{{ form.interests.value|default:'' }}" />
+
+            <div class="interests-search">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="interest-search" placeholder="Search interests..." />
+            </div>
+
+            <div class="interests-category">
+              <div class="interests-category-title">Sport & Fitness</div>
+              <div class="interests-group">
+                <button type="button" class="interest-chip" data-interest="surf"><span class="chip-icon">🏄</span> Surf</button>
+                <button type="button" class="interest-chip" data-interest="basketball"><span class="chip-icon">🏀</span> Basketball</button>
+                <button type="button" class="interest-chip" data-interest="gym"><span class="chip-icon">💪</span> Gym</button>
+                <button type="button" class="interest-chip" data-interest="running"><span class="chip-icon">🏃</span> Running</button>
+                <button type="button" class="interest-chip" data-interest="football"><span class="chip-icon">⚽</span> Football</button>
+                <button type="button" class="interest-chip" data-interest="swimming"><span class="chip-icon">🏊</span> Swimming</button>
+                <button type="button" class="interest-chip" data-interest="cycling"><span class="chip-icon">🚴</span> Cycling</button>
+                <button type="button" class="interest-chip" data-interest="yoga"><span class="chip-icon">🧘</span> Yoga</button>
+                <button type="button" class="interest-chip" data-interest="badminton"><span class="chip-icon">🏸</span> Badminton</button>
+                <button type="button" class="interest-chip" data-interest="volleyball"><span class="chip-icon">🏐</span> Volleyball</button>
+                <button type="button" class="interest-chip" data-interest="tennis"><span class="chip-icon">🎾</span> Tennis</button>
+                <button type="button" class="interest-chip" data-interest="martial-arts"><span class="chip-icon">🥋</span> Martial Arts</button>
+              </div>
+            </div>
+
+            <div class="interests-category">
+              <div class="interests-category-title">Food & Drink</div>
+              <div class="interests-group">
+                <button type="button" class="interest-chip" data-interest="coffee-chat"><span class="chip-icon">☕</span> Coffee Chat</button>
+                <button type="button" class="interest-chip" data-interest="cooking"><span class="chip-icon">🍳</span> Cooking</button>
+                <button type="button" class="interest-chip" data-interest="baking"><span class="chip-icon">🍰</span> Baking</button>
+                <button type="button" class="interest-chip" data-interest="foodies"><span class="chip-icon">🍽️</span> Foodies</button>
+                <button type="button" class="interest-chip" data-interest="bubble-tea"><span class="chip-icon">🧋</span> Bubble Tea</button>
+                <button type="button" class="interest-chip" data-interest="street-food"><span class="chip-icon">🌮</span> Street Food</button>
+                <button type="button" class="interest-chip" data-interest="restaurant-hopping"><span class="chip-icon">🍜</span> Restaurant Hopping</button>
+                <button type="button" class="interest-chip" data-interest="vegetarian"><span class="chip-icon">🥗</span> Vegetarian</button>
+              </div>
+            </div>
+
+            <div class="interests-category">
+              <div class="interests-category-title">Social & Lifestyle</div>
+              <div class="interests-group">
+                <button type="button" class="interest-chip" data-interest="hiking"><span class="chip-icon">🥾</span> Hiking</button>
+                <button type="button" class="interest-chip" data-interest="photography"><span class="chip-icon">📸</span> Photography</button>
+                <button type="button" class="interest-chip" data-interest="gaming"><span class="chip-icon">🎮</span> Gaming</button>
+                <button type="button" class="interest-chip" data-interest="book-club"><span class="chip-icon">📚</span> Book Club</button>
+                <button type="button" class="interest-chip" data-interest="art-design"><span class="chip-icon">🎨</span> Art & Design</button>
+                <button type="button" class="interest-chip" data-interest="travel"><span class="chip-icon">✈️</span> Travel</button>
+                <button type="button" class="interest-chip" data-interest="movies"><span class="chip-icon">🎬</span> Movies</button>
+                <button type="button" class="interest-chip" data-interest="anime"><span class="chip-icon">🎌</span> Anime</button>
+                <button type="button" class="interest-chip" data-interest="fashion"><span class="chip-icon">👗</span> Fashion</button>
+                <button type="button" class="interest-chip" data-interest="volunteering"><span class="chip-icon">🤝</span> Volunteering</button>
+                <button type="button" class="interest-chip" data-interest="pets"><span class="chip-icon">🐾</span> Pets</button>
+                <button type="button" class="interest-chip" data-interest="thrifting"><span class="chip-icon">🛍️</span> Thrifting</button>
+              </div>
+            </div>
+
+            <div class="interests-category">
+              <div class="interests-category-title">Music & Arts</div>
+              <div class="interests-group">
+                <button type="button" class="interest-chip" data-interest="live-music"><span class="chip-icon">🎵</span> Live Music</button>
+                <button type="button" class="interest-chip" data-interest="guitar"><span class="chip-icon">🎸</span> Guitar</button>
+                <button type="button" class="interest-chip" data-interest="singing"><span class="chip-icon">🎤</span> Singing</button>
+                <button type="button" class="interest-chip" data-interest="dancing"><span class="chip-icon">💃</span> Dancing</button>
+                <button type="button" class="interest-chip" data-interest="theatre"><span class="chip-icon">🎭</span> Theatre</button>
+                <button type="button" class="interest-chip" data-interest="filmmaking"><span class="chip-icon">🎥</span> Filmmaking</button>
+                <button type="button" class="interest-chip" data-interest="illustration"><span class="chip-icon">🖌️</span> Illustration</button>
+                <button type="button" class="interest-chip" data-interest="podcast"><span class="chip-icon">🎙️</span> Podcast</button>
+              </div>
+            </div>
+
+            <div class="interests-category">
+              <div class="interests-category-title">Tech & Academic</div>
+              <div class="interests-group">
+                <button type="button" class="interest-chip" data-interest="coding"><span class="chip-icon">💻</span> Coding</button>
+                <button type="button" class="interest-chip" data-interest="ai-ml"><span class="chip-icon">🤖</span> AI & ML</button>
+                <button type="button" class="interest-chip" data-interest="startup"><span class="chip-icon">🚀</span> Startup</button>
+                <button type="button" class="interest-chip" data-interest="research"><span class="chip-icon">🔬</span> Research</button>
+                <button type="button" class="interest-chip" data-interest="debate"><span class="chip-icon">🗣️</span> Debate</button>
+                <button type="button" class="interest-chip" data-interest="study-group"><span class="chip-icon">📖</span> Study Group</button>
+                <button type="button" class="interest-chip" data-interest="entrepreneurship"><span class="chip-icon">💡</span> Entrepreneurship</button>
+                <button type="button" class="interest-chip" data-interest="hackathon"><span class="chip-icon">⌨️</span> Hackathon</button>
+              </div>
+            </div>
+
+            <div class="interests-category">
+              <div class="interests-category-title">Wellness & Mindfulness</div>
+              <div class="interests-group">
+                <button type="button" class="interest-chip" data-interest="meditation"><span class="chip-icon">🧠</span> Meditation</button>
+                <button type="button" class="interest-chip" data-interest="journaling"><span class="chip-icon">📝</span> Journaling</button>
+                <button type="button" class="interest-chip" data-interest="mental-health"><span class="chip-icon">💚</span> Mental Health</button>
+                <button type="button" class="interest-chip" data-interest="nature"><span class="chip-icon">🌿</span> Nature</button>
+                <button type="button" class="interest-chip" data-interest="skincare"><span class="chip-icon">✨</span> Skincare</button>
+                <button type="button" class="interest-chip" data-interest="sustainability"><span class="chip-icon">♻️</span> Sustainability</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-save">Save Changes</button>
+            <a href="{% url 'profile' %}" class="btn-cancel">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  {% include 'main/_add_class_modal.html' %}
+
+  <script>
+    const hiddenInput = document.getElementById('id_interests');
+
+    // Pre-select chips from saved interests
+    const saved = new Set(
+      hiddenInput.value.split(',').map(s => s.trim()).filter(Boolean)
+    );
+    document.querySelectorAll('.interest-chip').forEach(chip => {
+      if (saved.has(chip.dataset.interest)) chip.classList.add('selected');
+    });
+
+    function syncHidden() {
+      const selected = Array.from(document.querySelectorAll('.interest-chip.selected'))
+        .map(c => c.dataset.interest);
+      hiddenInput.value = selected.join(', ');
+    }
+
+    document.querySelectorAll('.interest-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('selected');
+        syncHidden();
+      });
+    });
+
+    document.getElementById('interest-search').addEventListener('input', function () {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.interest-chip').forEach(chip => {
+        chip.style.display = chip.textContent.toLowerCase().includes(q) ? 'flex' : 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>

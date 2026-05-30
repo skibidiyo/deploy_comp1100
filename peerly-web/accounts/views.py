@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm
-from .models import Profile
+from .forms import RegisterForm, LoginForm, EditProfileForm
+from main.models import StudentProfile
 
 
 def register_view(request):
@@ -58,30 +58,46 @@ def dashboard_view(request):
 
 @login_required
 def profile_view(request):
-    profile, created = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={
-            'interests': ['Ethical AI', 'Full Stack', 'Philosophy of Mind', 'Cybersecurity', 'UX Design'],
-            'connections': 142,
-            'active_groups': 8,
-            'achievements': [
-                {'title': 'Top Mentor', 'subtitle': 'CSSE1001'},
-                {'title': 'Hackathon Winner', 'subtitle': 'UQ Hack 2023'},
-                {'title': 'Peer Tutor', 'subtitle': 'Silver Tier'},
-                {'title': "Dean's List", 'subtitle': 'S2 2023'},
-            ],
-            'recommended_buddies': [
-                {'name': 'Sarah Jenkins', 'detail': 'Shared: PHIL1002'},
-                {'name': "Liam O'Connor", 'detail': 'Shared: CSSE1001'},
-            ],
-            'timetable_summary': [
-                {'day': 'MON', 'time': '10:00 AM - 12:00 PM', 'event': 'CSSE1001 - Lecture', 'location': 'Hawken Eng Building'},
-                {'day': 'TUE', 'time': '02:00 PM - 03:00 PM', 'event': 'PHIL1002 - Tutorial', 'location': 'Forgan Smith'},
-            ],
-        }
-    )
+    profile, _ = StudentProfile.objects.get_or_create(user=request.user)
     return render(request, 'accounts/profile.html', {
         'user': request.user,
         'profile': profile,
+    })
+
+
+@login_required
+def edit_profile_view(request):
+    profile, _ = StudentProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            request.user.full_name = form.cleaned_data['full_name']
+            request.user.save(update_fields=['full_name'])
+
+            profile.degree = form.cleaned_data['degree']
+            profile.year = form.cleaned_data['year']
+            profile.bio = form.cleaned_data['bio']
+            raw_interests = form.cleaned_data['interests']
+            profile.interests = [i.strip() for i in raw_interests.split(',') if i.strip()] if raw_interests else []
+            profile.birthday = form.cleaned_data['birthday']
+            profile.save()
+
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('profile')
+    else:
+        form = EditProfileForm(initial={
+            'full_name': request.user.full_name,
+            'degree': profile.degree,
+            'year': profile.year,
+            'bio': profile.bio,
+            'interests': ', '.join(profile.interests) if profile.interests else '',
+            'birthday': profile.birthday,
+        })
+
+    return render(request, 'accounts/edit_profile.html', {
+        'user': request.user,
+        'profile': profile,
+        'form': form,
     })
 

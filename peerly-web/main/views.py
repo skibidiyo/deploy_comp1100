@@ -97,7 +97,7 @@ def complete_onboarding(request):
 		
 		# Create or update StudentProfile
 		try:
-			profile = request.user.profile
+			profile = request.user.student_profile
 		except StudentProfile.DoesNotExist:
 			profile = StudentProfile(user=request.user)
 		
@@ -122,7 +122,7 @@ def complete_onboarding(request):
 
 def _suggested_classmates(user, limit=5):
 	try:
-		user_classes = set(user.profile.classes or [])
+		user_classes = set(user.student_profile.classes or [])
 	except StudentProfile.DoesNotExist:
 		return []
 	if not user_classes:
@@ -152,7 +152,7 @@ def _suggested_classmates(user, limit=5):
 def dashboard(request):
 	current_user_name = request.user.get_full_name() or request.user.email.split('@')[0]
 	try:
-		user_classes = request.user.profile.classes or []
+		user_classes = request.user.student_profile.classes or []
 	except StudentProfile.DoesNotExist:
 		user_classes = []
 
@@ -270,7 +270,7 @@ def add_class(request):
 		
 		# Get or create the user's StudentProfile
 		try:
-			profile = request.user.profile
+			profile = request.user.student_profile
 		except StudentProfile.DoesNotExist:
 			profile = StudentProfile(user=request.user)
 		
@@ -340,7 +340,7 @@ def _get_peers(other_profiles, user_classes, search_query, selected_code, global
 @login_required
 def classmates_page(request):
 	try:
-		current_profile = request.user.profile
+		current_profile = request.user.student_profile
 		user_classes = current_profile.classes or []
 	except StudentProfile.DoesNotExist:
 		user_classes = []
@@ -387,7 +387,7 @@ def get_discover_match(request):
 	try:
 		# Get current user's profile
 		try:
-			current_profile = request.user.profile
+			current_profile = request.user.student_profile
 		except StudentProfile.DoesNotExist:
 			return JsonResponse({'success': False, 'message': 'Complete your profile first'}, status=400)
 

@@ -16,7 +16,7 @@ class StudentProfile(models.Model):
 		('double-degree', 'Double Degree'),
 	]
 
-	user = models.OneToOneField(PeerlyUser, on_delete=models.CASCADE, related_name='profile')
+	user = models.OneToOneField(PeerlyUser, on_delete=models.CASCADE, related_name='student_profile')
 	degree = models.CharField(max_length=255, blank=True)
 	year = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True)
 	bio = models.TextField(max_length=500, blank=True)

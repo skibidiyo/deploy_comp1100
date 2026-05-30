@@ -22,11 +22,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21H3V9.75z"/></svg>
         Home
       </a>
-      <a class="nav-item" href="#">
+      <a class="nav-item" href="{% url 'groups' %}">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
         Chat
       </a>
-      <a class="nav-item" href="{% url 'groups' %}">
+      <a class="nav-item" href="{% url 'groups' %}?tab=groups">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 100-8 4 4 0 000 8z"/></svg>
         Groups
       </a>
@@ -38,7 +38,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14a4 4 0 100-8 4 4 0 000 8zm-7 7a7 7 0 0114 0"/></svg>
         Classmates
       </a>
-      <a class="nav-item" href="#">
+      <a class="nav-item" href="{% url 'profile' %}">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.88 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         Profile
       </a>
@@ -288,30 +288,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
 
-  <!-- Add a Class Modal -->
-  <div id="addClassModal" class="modal-overlay" style="display:none;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Add a Class</h2>
-        <button id="closeModal" class="close-btn">×</button>
-      </div>
-      <form id="addClassForm">
-        {% csrf_token %}
-        <div class="modal-form-group">
-          <label for="classInput">Class Code</label>
-          <input type="text" id="classInput" name="class_code" placeholder="e.g., COMS2001" required>
-        </div>
-        <div class="modal-actions">
-          <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
-          <button type="submit" id="submitBtn" class="btn-submit" disabled>Add Class</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div id="successNotification" class="success-notification" style="display:none;"></div>
-
   <script>
-    // Filter chip interactivity
     document.querySelectorAll('.chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
@@ -319,7 +296,6 @@
       });
     });
 
-    // Nav item interactivity
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', () => {
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -327,7 +303,6 @@
       });
     });
 
-    // Interested button toggle
     document.querySelectorAll('.interested-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const isActive = btn.dataset.active === 'true';
@@ -336,65 +311,9 @@
         btn.firstChild.textContent = isActive ? 'Interested' : 'Going ✓';
       });
     });
-    // Add a Class modal
-    const modal = document.getElementById('addClassModal');
-    const addClassBtn = document.querySelector('.add-class-btn');
-    const closeModalBtn = document.getElementById('closeModal');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const addClassForm = document.getElementById('addClassForm');
-    const classInput = document.getElementById('classInput');
-    const submitBtn = document.getElementById('submitBtn');
-    const successNotification = document.getElementById('successNotification');
-
-    addClassBtn.addEventListener('click', () => { modal.style.display = 'flex'; classInput.focus(); });
-
-    const closeModal = () => { modal.style.display = 'none'; classInput.value = ''; submitBtn.disabled = true; };
-    closeModalBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    classInput.addEventListener('input', () => { submitBtn.disabled = !classInput.value.trim(); });
-
-    addClassForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const classCode = classInput.value.trim().toUpperCase();
-      const formData = new FormData();
-      formData.append('class_code', classCode);
-      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-      try {
-        const response = await fetch('{% url "add-class" %}', { method: 'POST', body: formData, headers: { 'X-CSRFToken': csrfToken } });
-        const data = await response.json();
-        if (data.success) {
-          const classes = JSON.parse(localStorage.getItem('peerly_classes') || '[]');
-          if (!classes.includes(classCode)) { classes.push(classCode); localStorage.setItem('peerly_classes', JSON.stringify(classes)); }
-          closeModal();
-          successNotification.textContent = '✓ ' + data.message;
-          successNotification.style.display = 'block';
-          setTimeout(() => { successNotification.style.display = 'none'; }, 3000);
-        } else {
-          alert('Error: ' + data.message);
-        }
-      } catch (error) {
-        alert('Error adding class: ' + error.message);
-      }
-    });
   </script>
 
-  <style>
-    .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000; }
-    .modal-content { background:#fff;border-radius:12px;padding:24px;width:90%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.15); }
-    .modal-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:20px; }
-    .modal-header h2 { margin:0;font-size:20px;font-weight:600; }
-    .close-btn { background:none;border:none;font-size:28px;cursor:pointer;color:#444; }
-    .modal-form-group { margin-bottom:20px; }
-    .modal-form-group label { display:block;margin-bottom:8px;font-weight:500;color:#333; }
-    .modal-form-group input { width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;box-sizing:border-box; }
-    .modal-form-group input:focus { outline:none;border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,.1); }
-    .modal-actions { display:flex;gap:12px;justify-content:flex-end; }
-    .btn-cancel,.btn-submit { padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-weight:500;font-size:14px; }
-    .btn-cancel { background:#f0f0f0;color:#333; }
-    .btn-submit { background:#7C3AED;color:#fff; }
-    .btn-submit:disabled { background:#ccc;color:#444;cursor:not-allowed; }
-    .success-notification { position:fixed;bottom:20px;right:20px;background:#10b981;color:#fff;padding:12px 20px;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:1001; }
-  </style>
+  {% include 'main/_add_class_modal.html' %}
+
 </body>
 </html>

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import PeerlyUser
+from main.models import StudentProfile
 
 
 class RegisterForm(UserCreationForm):
@@ -47,6 +48,34 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class EditProfileForm(forms.Form):
+    full_name = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Your full name'})
+    )
+    degree = forms.CharField(
+        max_length=255, required=False,
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. Bachelor of Computer Science'})
+    )
+    year = forms.ChoiceField(
+        choices=[('', 'Select year')] + StudentProfile.YEAR_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-input'})
+    )
+    bio = forms.CharField(
+        max_length=500, required=False,
+        widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 4, 'placeholder': 'Tell other students a bit about yourself...'})
+    )
+    interests = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'e.g. machine learning, hiking, chess'})
+    )
+    birthday = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-input', 'type': 'date'})
+    )
 
 
 class LoginForm(AuthenticationForm):
